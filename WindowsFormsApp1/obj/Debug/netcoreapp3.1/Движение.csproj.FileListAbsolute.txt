@@ -1,0 +1,30 @@
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.csprojAssemblyReference.cache
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\WindowsFormsApp1.Form1.resources
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.csproj.GenerateResource.cache
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.AssemblyInfoInputs.cache
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.AssemblyInfo.cs
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.csproj.CoreCompileInputs.cache
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\netcoreapp3.1\Движение.exe
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\netcoreapp3.1\Движение.deps.json
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\netcoreapp3.1\Движение.runtimeconfig.json
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\netcoreapp3.1\Движение.runtimeconfig.dev.json
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\netcoreapp3.1\Движение.dll
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\netcoreapp3.1\Движение.pdb
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.dll
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.pdb
+C:\Users\Lenovo\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.genruntimeconfig.cache
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\netcoreapp3.1\Движение.exe
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\netcoreapp3.1\Движение.deps.json
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\netcoreapp3.1\Движение.runtimeconfig.json
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\netcoreapp3.1\Движение.runtimeconfig.dev.json
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\netcoreapp3.1\Движение.dll
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\netcoreapp3.1\Движение.pdb
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.csprojAssemblyReference.cache
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\WindowsFormsApp1.Form1.resources
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.csproj.GenerateResource.cache
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.AssemblyInfoInputs.cache
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.AssemblyInfo.cs
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.csproj.CoreCompileInputs.cache
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.dll
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.pdb
+D:\Game\Govno =Code\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\netcoreapp3.1\Движение.genruntimeconfig.cache
