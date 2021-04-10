@@ -7,6 +7,8 @@ namespace Движение.Controllers
 {
     public static class PhysicsController
     {
+        public const int DistanceMove = 30;
+
         public static bool IsCollide(Entity entity)
         {
             if (entity.posX + entity.dirX <= 0 || entity.posX + entity.dirX >= MapController.cellSize * (MapController.mapWidth - 1)
@@ -15,6 +17,7 @@ namespace Движение.Controllers
                 entity.ResetMove();
                 return false;
             }
+            
             return true;
         }
 
