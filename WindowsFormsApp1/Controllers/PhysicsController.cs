@@ -12,10 +12,7 @@ namespace Движение.Controllers
             if (entity.posX + entity.dirX <= 0 || entity.posX + entity.dirX >= MapController.cellSize * (MapController.mapWidth - 1)
                 || entity.posY + entity.dirY <= 0 || entity.posY + entity.dirY >= MapController.cellSize * (MapController.mapHeight - 1))
             {
-                entity.isMoving = false;
-                entity.delta = 0;
-                entity.dirX = 0;
-                entity.dirY = 0;
+                entity.ResetMove();
                 return false;
             }
             return true;

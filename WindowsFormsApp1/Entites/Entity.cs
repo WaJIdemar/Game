@@ -10,7 +10,7 @@ namespace Движение.Entites
         public int dirX;
         public int dirY;
         private int lastDirX = 0;
-        public int delta = 0;
+        private int delta = 0;
         public bool isMoving;
 
         public bool pressButtonMove;
@@ -53,13 +53,16 @@ namespace Движение.Entites
             posX += dirX;
             delta += 3;
             if (delta == 30)
-            {
-                lastDirX = dirX;
-                dirY = 0;
-                dirX = 0;
-                delta = 0;
-                isMoving = false;
-            }
+                ResetMove();
+        }
+
+        public void ResetMove()
+        {
+            lastDirX = dirX;
+            dirY = 0;
+            dirX = 0;
+            delta = 0;
+            isMoving = false;
         }
 
         public void PlayAnimation(Graphics g)
