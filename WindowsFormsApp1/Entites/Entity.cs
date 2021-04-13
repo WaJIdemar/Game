@@ -9,7 +9,7 @@ namespace Движение.Entites
 
         public int dirX;
         public int dirY;
-        private int lastDirX = 0;
+        public int lastDirX = 0;
         private int delta = 0;
         public bool isMoving;
 
@@ -58,7 +58,6 @@ namespace Движение.Entites
 
         public void ResetMove()
         {
-            lastDirX = dirX;
             dirY = 0;
             dirX = 0;
             delta = 0;
@@ -70,7 +69,8 @@ namespace Движение.Entites
             if (currentFrame < currentLimit - 1)
                 currentFrame++;
             else currentFrame = 0;
-            if (dirX > 0 && currentAnimation == 1 || currentAnimation == 0 && lastDirX > 0)
+            if ((currentAnimation == 0 || currentAnimation == 1) && (dirX > 0 
+                || lastDirX > 0))
                 g.DrawImage(spriteSheetRigth, new Rectangle(new Point(posX, posY), new Size(size, size)),
                     32 * currentFrame, 32 * currentAnimation, size, size, GraphicsUnit.Pixel);
             else

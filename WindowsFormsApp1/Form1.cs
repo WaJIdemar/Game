@@ -12,8 +12,6 @@ using Движение.Controllers;
 using Движение.Entites;
 using Движение.Models;
 
-//TODO: 3. Сделать генератор карты (ручной пока что) и проверку на выход за границы
-
 namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
@@ -56,11 +54,13 @@ namespace WindowsFormsApp1
                         break;
                     case Keys.A:
                         player.dirX = -3;
+                        player.lastDirX = -3;
                         player.isMoving = true;
                         player.SetAnimationConfiguration(1);
                         break;
                     case Keys.D:
                         player.dirX = 3;
+                        player.lastDirX = 3;
                         player.isMoving = true;
                         player.SetAnimationConfiguration(1);
                         break;
