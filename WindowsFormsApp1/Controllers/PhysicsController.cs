@@ -7,19 +7,39 @@ namespace Движение.Controllers
 {
     public static class PhysicsController
     {
-        public const int DistanceMove = 30;
-
         public static bool IsCollide(Entity entity)
-        {
-            if (entity.posX + entity.dirX <= 0 || entity.posX + entity.dirX >= MapController.cellSize * (MapController.mapWidth - 1)
-                || entity.posY + entity.dirY <= 0 || entity.posY + entity.dirY >= MapController.cellSize * (MapController.mapHeight - 1))
+        {  
+            if (!MapBorders(entity) || !CollisionWithObjects(entity))
             {
                 entity.ResetMove();
                 return false;
             }
-            
             return true;
         }
 
+        public static bool MapBorders(Entity entity)
+        {
+            if (entity.LocationMap.X + 1 > MapController.mapWidth && entity.LocationMap.X - 1 < 0 
+                && entity.LocationMap.Y + 1 > MapController.mapHeight && entity.LocationMap.Y - 1 < 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool CollisionWithObjects(Entity entity)
+        {
+            if (entity.dirX > 0 && MapController.map[entity.LocationMap.Y, entity.LocationMap.X + 1] != 0)
+                return false;
+            else if (entity.dirX < 0 && MapController.map[entity.LocationMap.Y, entity.LocationMap.X - 1] != 0)
+                return false;
+            else if (entity.dirY > 0 && MapController.map[entity.LocationMap.Y + 1, entity.LocationMap.X] != 0)
+                return false;
+            else if (entity.dirY < 0 && MapController.map[entity.LocationMap.Y - 1, entity.LocationMap.X] != 0)
+                return false;
+
+            return true;
+        }
     }
 }

@@ -80,7 +80,7 @@ namespace WindowsFormsApp1
             gladiatorSheetLeft = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Gladiator_Left.png"));
 
-            player = new Entity(100, 100, Hero.idleFrames, Hero.runFrames, Hero.attackFrames,
+            player = new Entity(310, 310, Hero.idleFrames, Hero.runFrames, Hero.attackFrames,
                 Hero.deathFrames, gladiatorSheetLeft, gladiatorSheetRight);
             timer1.Start();
         }

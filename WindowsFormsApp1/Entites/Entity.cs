@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Движение.Controllers;
 
 namespace Движение.Entites
 {
@@ -6,6 +7,8 @@ namespace Движение.Entites
     {
         public int posX;
         public int posY;
+
+        public Point LocationMap;
 
         public int dirX;
         public int dirY;
@@ -45,6 +48,7 @@ namespace Движение.Entites
             currentFrame = 0;
             currentLimit = idleFrames;
             pressButtonMove = false;
+            LocationMap = new Point(MapController.mapWidth / 2, MapController.mapHeight / 2);
         }
 
         public void Move()
@@ -53,7 +57,17 @@ namespace Движение.Entites
             posX += dirX;
             delta += 3;
             if (delta == 30)
+            {
+                if (dirX > 0)
+                    LocationMap.X++;
+                else if (dirX < 0)
+                    LocationMap.X--;
+                else if (dirY > 0)
+                    LocationMap.Y++;
+                else if (dirY < 0)
+                    LocationMap.Y--;
                 ResetMove();
+            }
         }
 
         public void ResetMove()
