@@ -109,16 +109,3 @@ namespace WindowsFormsApp1
         }
     }
 }
-//public void StepOn(int dirX, int dirY, int repeats)
-//{
-//    player.dirX = dirX;
-//    player.dirY = dirY;
-//    timer1.Interval = 50;
-//    player.isMoving = true;
-//    player.SetAnimationConfiguration(1);
-//    for (int i = 0; i < repeats; i++)
-//    {
-//        Invalidate();
-//    }
-//    timer1.Interval = 100;
-//}
