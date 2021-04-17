@@ -66,6 +66,11 @@ namespace Движение.Entites
                     LocationMap.Y++;
                 else if (dirY < 0)
                     LocationMap.Y--;
+                if (MapController.map[LocationMap.Y, LocationMap.X] == 'C')
+                {
+                    MapController.map[LocationMap.Y, LocationMap.X] = '0';
+                }
+
                 ResetMove();
             }
         }

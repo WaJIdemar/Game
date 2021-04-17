@@ -7,9 +7,9 @@ namespace Движение.Controllers
 {
     public static class PhysicsController
     {
-        public static bool IsCollide(Entity entity)
+        public static bool IsCollide(Entity entity, HashSet<char> colObj)
         {  
-            if (MapBorders(entity) && CollisionWithObjects(entity))
+            if (MapBorders(entity) && CollisionWithObjects(entity, colObj))
             {
                 return true;
             }
@@ -29,15 +29,15 @@ namespace Движение.Controllers
             return false;
         }
 
-        public static bool CollisionWithObjects(Entity entity)
+        public static bool CollisionWithObjects(Entity entity, HashSet<char> obj)
         {
-            if (entity.dirX > 0 && MapController.map[entity.LocationMap.Y, entity.LocationMap.X + 1] != '0')
+            if (entity.dirX > 0 && obj.Contains(MapController.map[entity.LocationMap.Y, entity.LocationMap.X + 1]))
                 return false;
-            else if (entity.dirX < 0 && MapController.map[entity.LocationMap.Y, entity.LocationMap.X - 1] != '0')
+            else if (entity.dirX < 0 && obj.Contains(MapController.map[entity.LocationMap.Y, entity.LocationMap.X - 1]))
                 return false;
-            else if (entity.dirY > 0 && MapController.map[entity.LocationMap.Y + 1, entity.LocationMap.X] != '0')
+            else if (entity.dirY > 0 && obj.Contains(MapController.map[entity.LocationMap.Y + 1, entity.LocationMap.X]))
                 return false;
-            else if (entity.dirY < 0 && MapController.map[entity.LocationMap.Y - 1, entity.LocationMap.X] != '0')
+            else if (entity.dirY < 0 && obj.Contains(MapController.map[entity.LocationMap.Y - 1, entity.LocationMap.X]))
                 return false;
 
             return true;

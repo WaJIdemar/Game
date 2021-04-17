@@ -71,14 +71,16 @@ namespace WindowsFormsApp1
 
         public void Init()
         {
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
             MapController.Init();
             this.Width = MapController.GetWidth();
             this.Height = MapController.GetHeight();
 
             gladiatorSheetRight = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Gladiator_Right.png"));
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Gladiator_Right.png"));
             gladiatorSheetLeft = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Gladiator_Left.png"));
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Gladiator_Left.png"));
 
             player = new Entity((this.Width - MapController.cellSize * 2) / 2 + 7, (this.Height - MapController.cellSize * 2) / 2 - 7,
                 Hero.idleFrames, Hero.runFrames, Hero.attackFrames,
@@ -88,7 +90,7 @@ namespace WindowsFormsApp1
 
         public void Update(object sender, EventArgs e)
         {
-            if (player.isMoving && PhysicsController.IsCollide(player))
+            if (player.isMoving && PhysicsController.IsCollide(player, MapController.stop))
             {
                 timer1.Interval = 33;
                 player.Move();
