@@ -10,7 +10,7 @@ namespace Движение.Entites
     {
         public int posX;
         public int posY;
-
+        public int Health { get; set; }
         public Point LocationMap;
 
         public int currentAnimation;
@@ -43,7 +43,12 @@ namespace Движение.Entites
             LocationMap = new Point(9, 2);
         }
 
-        public void PlayAnimation(Graphics g)
+        public void Move()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PlayAnimation(Graphics g, int posX, int posY, int size)
         {
             if (currentFrame < currentLimit - 1)
                 currentFrame++;
@@ -56,6 +61,11 @@ namespace Движение.Entites
                 currentPathToSprite.ToString()));
 
             g.DrawImage(spriteOrangeMonster, new Rectangle(new Point(posX, posY), new Size(size, size)));
+        }
+
+        public void ResetMove()
+        {
+            throw new NotImplementedException();
         }
 
         public void SetAnimationConfiguration(int currentAnimation)

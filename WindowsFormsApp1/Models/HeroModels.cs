@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Движение.Models
 {
-    public static class Hero
+    public static class HeroModels
     {
         public static int idleFrames = 5;
         public static int runFrames = 8;

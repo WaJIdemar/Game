@@ -47,8 +47,8 @@ namespace WindowsFormsApp1
             gladiatorSheetLeft = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Gladiator_Left.png"));
             player = new Движение.Entites.Hero((this.Width / 4 + 2 * MapController.cellSize + 14), (this.Height / 4 - MapController.cellSize - 11),
-                Движение.Models.Hero.idleFrames, Движение.Models.Hero.runFrames, Движение.Models.Hero.attackFrames,
-                Движение.Models.Hero.deathFrames, gladiatorSheetLeft, gladiatorSheetRight);
+                Движение.Models.HeroModels.idleFrames, Движение.Models.HeroModels.runFrames, Движение.Models.HeroModels.attackFrames,
+                Движение.Models.HeroModels.deathFrames, gladiatorSheetLeft, gladiatorSheetRight);
             MoveController.AddPlayer(player);
             
             timer1.Start();

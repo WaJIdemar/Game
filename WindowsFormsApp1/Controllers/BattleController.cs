@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Drawing;
 using Движение.Entites;
 using Движение.Controllers;
@@ -10,11 +10,12 @@ namespace Движение.Controllers
 {
     class BattleController
     {
-        
-        public void BattleSceneDraw(Entites.Hero player, OrangeMonster[] monsters, Image background, Graphics graphics)
+        List<ICharacter> characters;
+        public void BattleSceneDraw(Hero player, ICharacter[] monsters, Image background, Graphics graphics, ref bool battleFlag)
         {
             graphics.DrawImageUnscaled(background, new Point(0, 0));
-            
+            monsters[0].PlayAnimation(graphics, background.Width * 5 / 6, background.Height * 2 / 3, 170);
+            player.PlayAnimation()
         }
     }
 }

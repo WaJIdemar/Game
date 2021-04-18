@@ -90,7 +90,7 @@ namespace Движение.Controllers
                             drawMonster.Value.posX = j * cellSize - delta.X - width / 24;
                             drawMonster.Value.posY = i * cellSize - delta.Y - height / 5;
                             g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
-                            drawMonster.Value.PlayAnimation(g);
+                            drawMonster.Value.PlayAnimation(g, drawMonster.Value.posX, drawMonster.Value.posY, drawMonster.Value.size);
                             drawMonster = drawMonster.Next;
                             break;
 

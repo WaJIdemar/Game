@@ -11,10 +11,11 @@ namespace Движение.Entites
 
         void ResetMove();
 
+        int Health { get; set; }
 
-        void PlayAnimation(Graphics g);
+        void PlayAnimation(Graphics g, int posX, int posY, int size);
 
-
+        
         void SetAnimationConfiguration(int currentAnimation);
         
     }
