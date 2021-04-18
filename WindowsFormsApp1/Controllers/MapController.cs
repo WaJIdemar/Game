@@ -95,6 +95,7 @@ namespace Движение.Controllers
                             break;
 
                         case 'C':
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
                             g.DrawImage(spriteChest, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 0, 0, 200, 129, GraphicsUnit.Pixel);
                             break;
 
