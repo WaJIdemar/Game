@@ -49,6 +49,7 @@ namespace WindowsFormsApp1
                 Hero.idleFrames, Hero.runFrames, Hero.attackFrames,
                 Hero.deathFrames, gladiatorSheetLeft, gladiatorSheetRight);
             MoveController.AddPlayer(player);
+            
             timer1.Start();
         }
 

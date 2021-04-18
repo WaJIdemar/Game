@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using Движение.Entites;
+using Движение.Models;
 
 namespace Движение.Controllers
 {
@@ -15,6 +17,8 @@ namespace Движение.Controllers
         public static char[,] map = new char[mapHeight, mapWidth];
         public static Image spriteSheet;
         public static Image spriteChest;
+        public static LinkedList<OrangeMonster> monsters;
+        public static LinkedListNode<OrangeMonster> drawMonster;
 
         public static void Init()
         {
@@ -25,6 +29,7 @@ namespace Движение.Controllers
             spriteChest =
                 new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Chest.png"));
+            CreateEntity();
         }
 
         public static char[,] GetMap()
@@ -32,7 +37,7 @@ namespace Движение.Controllers
             return new char[,]
             {
                 { '0', '0', '0', 'w', 'w', 'w', 'w', '0', 'w', '0', '0', '0', 'w', 'w', '0', 'w', '0', '0', '0', 'w', '0'},
-                { '0', '0', '0', '0', 'w', 'w', 'w', '0', '0', '0', 'w', '0', 'w', 'w', '0', '0', '0', 'w', '0', 'w', '0'},
+                { '0', '0', '0', '0', 'w', 'w', 'w', '0', 'M', '0', 'w', '0', 'w', 'w', '0', '0', '0', 'w', '0', 'w', '0'},
                 { '0', '0', '0', '0', '0', 'w', 'w', '0', 'w', '0', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0', '0', '0'},
                 { 'w', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', '0', '0', '0', '0', '0', '0', '0', '0', 'w', 'w'},
                 { 'w', 'w', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', 'w', '0', 'w', 'w', 'w', 'w', '0', '0', '0'},
@@ -42,7 +47,7 @@ namespace Движение.Controllers
                 { '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', 'w', 'w', 'w', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0'},
                 { '0', 'w', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', '0', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0'},
                 { '0', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
-                { '0', 'w', 'w', 'w', '0', '0', 'w', '0', 'w', '0', '0', '0', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0'},
+                { '0', 'w', 'w', 'w', '0', '0', 'w', '0', 'w', '0', '0', '0', 'w', 'w', 'w', 'M', 'M', 'M', 'M', 'w', '0'},
                 { '0', '0', 'w', 'w', '0', '0', 'w', '0', 'w', 'w', '0', 'w', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0'},
                 { 'w', '0', '0', 'w', 'w', '0', 'w', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
                 { 'w', 'w', '0', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', '0', 'w', 'w', '0', 'w', 'w', 'w', 'w'},
@@ -57,6 +62,7 @@ namespace Движение.Controllers
 
         public static void DrawMap(Graphics g, Point delta, int width, int height)
         {
+            drawMonster = monsters.First;
             for (int i = 0; i < mapWidth; i++)
             {
                 for (int j = 0; j < mapHeight; j++)
@@ -81,7 +87,11 @@ namespace Движение.Controllers
                             break;
 
                         case 'M':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 96, 20, 20, 20, GraphicsUnit.Pixel);
+                            drawMonster.Value.posX = j * cellSize - delta.X - width / 24;
+                            drawMonster.Value.posY = i * cellSize - delta.Y - height / 5;
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
+                            drawMonster.Value.PlayAnimation(g);
+                            drawMonster = drawMonster.Next;
                             break;
 
                         case 'C':
@@ -100,6 +110,21 @@ namespace Движение.Controllers
                             g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
                             break;
                     }
+                }
+            }
+        }
+
+        private static void CreateEntity()
+        {
+            monsters = new LinkedList<OrangeMonster>();
+            for (int i = 0; i < mapWidth; i++)
+            {
+                for (int j = 0; j < mapHeight; j++)
+                {
+                    if (map[i, j] == 'M')
+                        monsters.AddLast(new OrangeMonster(j * cellSize, i * cellSize, MonsterModels.idleFrames, MonsterModels.runFrames, MonsterModels.deathFrames,
+               MonsterModels.deathFrames, Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+               .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Orange\Stand\")));
                 }
             }
         }
