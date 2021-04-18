@@ -5,26 +5,17 @@ using System.Drawing;
 
 namespace Движение.Entites
 {
-    interface ICharacter
+    public interface ICharacter
     {
-        public void Move()
-        {
-            throw new NotImplementedException();
-        }
+        void Move();
 
-        public void ResetMove()
-        {
-            throw new NotImplementedException();
-        }
+        void ResetMove();
 
-        public void PlayAnimation(Graphics g)
-        {
-            throw new NotImplementedException();
-        }
 
-        public void SetAnimationConfiguration(int currentAnimation)
-        {
-            throw new NotImplementedException();
-        }
+        void PlayAnimation(Graphics g);
+
+
+        void SetAnimationConfiguration(int currentAnimation);
+        
     }
 }
