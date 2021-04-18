@@ -26,6 +26,7 @@ namespace WindowsFormsApp1
             InitializeComponent();
 
             timer1.Interval = 1;
+            timer2.Interval = 200;
             timer1.Tick += new EventHandler(Update);
 
             KeyUp += new KeyEventHandler(MoveController.OnKeyUp);
