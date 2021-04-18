@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Движение.Entites
 {
-    public class OrangeMonster
+    public class OrangeMonster : ICharacter
     {
         public int posX;
         public int posY;
@@ -79,15 +79,3 @@ namespace Движение.Entites
         }
     }
 }
-
-//var graphics = CreateGraphics();
-//fSizeY = ClientSize.Height;
-//fSizeX = ClientSize.Width;
-//graphics.ScaleTransform(fSizeX / 600, fSizeY / 600);
-//var fileName = new StringBuilder(@"Sprites\Snowman\Snowman");
-//fileName.Append((t % 8).ToString() + ".png");
-//var i = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-//.Parent.Parent.FullName.ToString(), fileName.ToString()));
-//graphics.FillRectangle(Brushes.White, new Rectangle(0, 0, ClientSize.Width, ClientSize.Height));
-//graphics.DrawImage(i, new PointF(centerX, centerY));
-//t++;

@@ -10,7 +10,8 @@ namespace Движение.Controllers
 {
     class BattleController
     {
-        public void BattleSceneDraw(Entity player, OrangeMonster[] monsters, Image background, Graphics graphics)
+        
+        public void BattleSceneDraw(Entites.Hero player, OrangeMonster[] monsters, Image background, Graphics graphics)
         {
             graphics.DrawImageUnscaled(background, new Point(0, 0));
             

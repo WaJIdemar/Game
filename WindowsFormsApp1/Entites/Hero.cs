@@ -3,7 +3,7 @@ using Движение.Controllers;
 
 namespace Движение.Entites
 {
-    public class Entity
+    public class Hero : ICharacter
     {
         public int posX;
         public int posY;
@@ -32,7 +32,7 @@ namespace Движение.Entites
 
         public int size;
 
-        public Entity(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
+        public Hero(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
             Image spriteSheetLeft, Image spriteSheetRigth)
         {
             this.posX = posX;

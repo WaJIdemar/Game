@@ -8,11 +8,11 @@ namespace Движение.Controllers
 {
     public static class MoveController
     {
-        private static Entity player;
+        private static Hero player;
 
         private const int dir = 3; 
 
-        public static void AddPlayer(Entity entity)
+        public static void AddPlayer(Hero entity)
         {
             player = entity;
         }

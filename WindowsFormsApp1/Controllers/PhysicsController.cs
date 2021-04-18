@@ -7,7 +7,7 @@ namespace Движение.Controllers
 {
     public static class PhysicsController
     {
-        public static bool IsCollide(Entity entity, HashSet<char> colObj)
+        public static bool IsCollide(Hero entity, HashSet<char> colObj)
         {  
             if (MapBorders(entity) && CollisionWithObjects(entity, colObj))
             {
@@ -17,7 +17,7 @@ namespace Движение.Controllers
             return false;
         }
 
-        public static bool MapBorders(Entity entity)
+        public static bool MapBorders(Hero entity)
         {
             if ((entity.dirX > 0 && entity.LocationMap.X + 1 < MapController.mapWidth) || (entity.LocationMap.X - 1 >= 0 
                 && entity.dirX < 0) || (entity.LocationMap.Y + 1 < MapController.mapHeight && entity.dirY > 0)
@@ -29,7 +29,7 @@ namespace Движение.Controllers
             return false;
         }
 
-        public static bool CollisionWithObjects(Entity entity, HashSet<char> obj)
+        public static bool CollisionWithObjects(Hero entity, HashSet<char> obj)
         {
             if (entity.dirX > 0 && obj.Contains(MapController.map[entity.LocationMap.Y, entity.LocationMap.X + 1]))
                 return false;

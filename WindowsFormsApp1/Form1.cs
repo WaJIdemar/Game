@@ -18,7 +18,7 @@ namespace WindowsFormsApp1
     {
         public Image gladiatorSheetRight;
         public Image gladiatorSheetLeft;
-        public Entity player;
+        public Движение.Entites.Hero player;
         public Point delta;
 
         public Form1()
@@ -46,9 +46,9 @@ namespace WindowsFormsApp1
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Gladiator_Right.png"));
             gladiatorSheetLeft = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Gladiator_Left.png"));
-            player = new Entity((this.Width / 4 + 2 * MapController.cellSize + 14), (this.Height / 4 - MapController.cellSize - 11),
-                Hero.idleFrames, Hero.runFrames, Hero.attackFrames,
-                Hero.deathFrames, gladiatorSheetLeft, gladiatorSheetRight);
+            player = new Движение.Entites.Hero((this.Width / 4 + 2 * MapController.cellSize + 14), (this.Height / 4 - MapController.cellSize - 11),
+                Движение.Models.Hero.idleFrames, Движение.Models.Hero.runFrames, Движение.Models.Hero.attackFrames,
+                Движение.Models.Hero.deathFrames, gladiatorSheetLeft, gladiatorSheetRight);
             MoveController.AddPlayer(player);
             
             timer1.Start();
