@@ -55,7 +55,7 @@ namespace Движение.Controllers
             };
         }
 
-        public static void DrawMap(Graphics g)
+        public static void DrawMap(Graphics g, Point delta, int width, int height)
         {
             for (int i = 0; i < mapWidth; i++)
             {
@@ -65,39 +65,39 @@ namespace Движение.Controllers
                     {
 
                         case 'w':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 96, 0, 20, 20, GraphicsUnit.Pixel);
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 96, 0, 20, 20, GraphicsUnit.Pixel);
                             break;
 
                         case 'K':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 170, 0, 20, 20, GraphicsUnit.Pixel);
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 170, 0, 20, 20, GraphicsUnit.Pixel);
                             break;
 
                         case 'B':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 96, 75, 20, 20, GraphicsUnit.Pixel);
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 96, 75, 20, 20, GraphicsUnit.Pixel);
                             break;
 
                         case 'W':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 170, 75, 20, 20, GraphicsUnit.Pixel);
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 170, 75, 20, 20, GraphicsUnit.Pixel);
                             break;
 
                         case 'M':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 96, 20, 20, 20, GraphicsUnit.Pixel);
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 96, 20, 20, 20, GraphicsUnit.Pixel);
                             break;
 
                         case 'C':
-                            g.DrawImage(spriteChest, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 0, 0, 200, 129, GraphicsUnit.Pixel);
+                            g.DrawImage(spriteChest, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 0, 0, 200, 129, GraphicsUnit.Pixel);
                             break;
 
                         case 'm':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 170, 30, 20, 20, GraphicsUnit.Pixel);
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 170, 30, 20, 20, GraphicsUnit.Pixel);
                             break;
 
                         case 'T':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 120, 75, 20, 20, GraphicsUnit.Pixel);
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 120, 75, 20, 20, GraphicsUnit.Pixel);
                             break;
 
                         case '0':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize - delta.X - width / 24, i * cellSize - delta.Y - height / 5), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
                             break;
                     }
                 }

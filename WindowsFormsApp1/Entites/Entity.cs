@@ -9,11 +9,11 @@ namespace Движение.Entites
         public int posY;
 
         public Point LocationMap;
-
+        public Point delta;
         public int dirX;
         public int dirY;
         public int lastDirX = 0;
-        private int delta = 0;
+        private int counter= 0;
         public bool isMoving;
 
         public bool pressButtonMove;
@@ -43,6 +43,7 @@ namespace Движение.Entites
             this.deathFrames = deathFrames;
             this.spriteSheetLeft = spriteSheetLeft;
             this.spriteSheetRigth = spriteSheetRigth;
+            delta = new Point(0, 0);
             size = 30;
             currentAnimation = 0;
             currentFrame = 0;
@@ -53,10 +54,10 @@ namespace Движение.Entites
 
         public void Move()
         {
-            posY += dirY;
-            posX += dirX;
-            delta += 3;
-            if (delta == 30)
+            delta.X += dirX;
+            delta.Y += dirY;
+            counter += 3;
+            if (counter == 30)
             {
                 if (dirX > 0)
                     LocationMap.X++;
@@ -79,7 +80,7 @@ namespace Движение.Entites
         {
             dirY = 0;
             dirX = 0;
-            delta = 0;
+            counter = 0;
             isMoving = false;
         }
 

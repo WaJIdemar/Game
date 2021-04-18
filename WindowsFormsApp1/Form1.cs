@@ -19,6 +19,8 @@ namespace WindowsFormsApp1
         public Image gladiatorSheetRight;
         public Image gladiatorSheetLeft;
         public Entity player;
+        public Point delta;
+
         public Form1()
         {
             InitializeComponent();
@@ -26,47 +28,9 @@ namespace WindowsFormsApp1
             timer1.Interval = 1;
             timer1.Tick += new EventHandler(Update);
 
-            KeyUp += new KeyEventHandler(OnKeyUp);
-            KeyDown += new KeyEventHandler(OnPress);
+            KeyUp += new KeyEventHandler(MoveController.OnKeyUp);
+            KeyDown += new KeyEventHandler(MoveController.OnPress);
             Init();
-        }
-
-        public void OnKeyUp(object sender, KeyEventArgs e)
-        {
-            player.pressButtonMove = false;
-        }
-
-        public void OnPress(object sender, KeyEventArgs e)
-        {
-            if (!player.pressButtonMove && !player.isMoving)
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.W:
-                        player.dirY = -3;
-                        player.isMoving = true;
-                        player.SetAnimationConfiguration(1);
-                        break;
-                    case Keys.S:
-                        player.dirY = 3;
-                        player.isMoving = true;
-                        player.SetAnimationConfiguration(1);
-                        break;
-                    case Keys.A:
-                        player.dirX = -3;
-                        player.lastDirX = -3;
-                        player.isMoving = true;
-                        player.SetAnimationConfiguration(1);
-                        break;
-                    case Keys.D:
-                        player.dirX = 3;
-                        player.lastDirX = 3;
-                        player.isMoving = true;
-                        player.SetAnimationConfiguration(1);
-                        break;
-                }
-                player.pressButtonMove = true;
-            }
         }
 
         public void Init()
@@ -81,10 +45,10 @@ namespace WindowsFormsApp1
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Gladiator_Right.png"));
             gladiatorSheetLeft = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Gladiator_Left.png"));
-
-            player = new Entity((this.Width - MapController.cellSize * 2) / 2 + 7, (this.Height - MapController.cellSize * 2) / 2 - 7,
+            player = new Entity((this.Width / 4 + 2 * MapController.cellSize + 14), (this.Height / 4 - MapController.cellSize - 11),
                 Hero.idleFrames, Hero.runFrames, Hero.attackFrames,
                 Hero.deathFrames, gladiatorSheetLeft, gladiatorSheetRight);
+            MoveController.AddPlayer(player);
             timer1.Start();
         }
 
@@ -106,7 +70,9 @@ namespace WindowsFormsApp1
         private void OnPaint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            MapController.DrawMap(g);
+            g.ScaleTransform(3, 3);
+            g.FillRectangle(Brushes.Black, new Rectangle(0, 0, this.Width, this.Height));
+            MapController.DrawMap(g, player.delta, this.Width, this.Height);
             player.PlayAnimation(g);
         }
     }
