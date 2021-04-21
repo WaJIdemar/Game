@@ -27,7 +27,7 @@ namespace Движение.Entites
         public int size;
 
         public OrangeMonster(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
-            string pathToSprites)
+            string pathToSprites, Point locationMap)
         {
             this.posX = posX;
             this.posY = posY;
@@ -40,7 +40,7 @@ namespace Движение.Entites
             currentAnimation = 0;
             currentFrame = 0;
             currentLimit = idleFrames;
-            LocationMap = new Point(9, 2);
+            LocationMap = locationMap;
         }
 
         public void Move()

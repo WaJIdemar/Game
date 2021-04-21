@@ -24,7 +24,7 @@ namespace Движение.Controllers
 
         public static void OnPress(object sender, KeyEventArgs e)
         {
-            if (!player.pressButtonMove && !player.isMoving)
+            if (!player.pressButtonMove && !player.isMoving && player.isAlive)
             {
                 switch (e.KeyCode)
                 {

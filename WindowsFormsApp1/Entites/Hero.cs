@@ -7,7 +7,8 @@ namespace Движение.Entites
     {
         public int posX;
         public int posY;
-
+        public bool isAlive { get; private set; }
+        public int Health { get; set; }
         public Point LocationMap;
         public Point delta;
         public int dirX;
@@ -15,6 +16,8 @@ namespace Движение.Entites
         public int lastDirX = 0;
         private int counter= 0;
         public bool isMoving;
+
+        public bool isInBattle;
 
         public bool pressButtonMove;
 
@@ -50,6 +53,9 @@ namespace Движение.Entites
             currentLimit = idleFrames;
             pressButtonMove = false;
             LocationMap = new Point(MapController.mapWidth / 2, MapController.mapHeight / 2);
+            isInBattle = false;
+            Health = 4;
+            isAlive = true;
         }
 
         public void Move()
@@ -71,6 +77,16 @@ namespace Движение.Entites
                 {
                     MapController.map[LocationMap.Y, LocationMap.X] = '0';
                 }
+                else if (MapController.map[LocationMap.Y, LocationMap.X] == 'M')
+                {
+                    if (Health > 0)
+                    {
+                        MapController.map[LocationMap.Y, LocationMap.X] = '0';
+                        Health--;
+                    }
+                    else
+                        isAlive = false;
+                }
 
                 ResetMove();
             }
@@ -82,20 +98,6 @@ namespace Движение.Entites
             dirX = 0;
             counter = 0;
             isMoving = false;
-        }
-
-        public void PlayAnimation(Graphics g)
-        {
-            if (currentFrame < currentLimit - 1)
-                currentFrame++;
-            else currentFrame = 0;
-            if ((currentAnimation == 0 || currentAnimation == 1) && (dirX > 0 
-                || lastDirX > 0))
-                g.DrawImage(spriteSheetRigth, new Rectangle(new Point(posX, posY), new Size(size, size)),
-                    32 * currentFrame, 32 * currentAnimation, size, size, GraphicsUnit.Pixel);
-            else
-                g.DrawImage(spriteSheetLeft, new Rectangle(new Point(posX, posY), new Size(size, size)),
-                    32 * currentFrame, 32 * currentAnimation, size, size, GraphicsUnit.Pixel); 
         }
 
         public void SetAnimationConfiguration(int currentAnimation)
@@ -116,6 +118,20 @@ namespace Движение.Entites
                     currentLimit = deathFrames;
                     break;
             }
+        }
+
+        public void PlayAnimation(Graphics g, int posX, int posY, int size)
+        {
+            if (currentFrame < currentLimit - 1)
+                currentFrame++;
+            else currentFrame = 0;
+            if ((currentAnimation == 0 || currentAnimation == 1) && (dirX > 0
+                || lastDirX > 0))
+                g.DrawImage(spriteSheetRigth, new Rectangle(new Point(posX, posY), new Size(size, size)),
+                    32 * currentFrame, 32 * currentAnimation, size, size, GraphicsUnit.Pixel);
+            else
+                g.DrawImage(spriteSheetLeft, new Rectangle(new Point(posX, posY), new Size(size, size)),
+                    32 * currentFrame, 32 * currentAnimation, size, size, GraphicsUnit.Pixel);
         }
     }
 }
