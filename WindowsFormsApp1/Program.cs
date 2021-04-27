@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApp1;
+using Движение;
 
 namespace Передвижение_по_карте
 {
@@ -15,7 +16,7 @@ namespace Передвижение_по_карте
 	{
 		public static void Main()
 		{
-			Application.Run(new Form1());
+			Application.Run(new MenuScreen());
 		}
 	}
 }

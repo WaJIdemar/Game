@@ -50,6 +50,9 @@ namespace Движение.Controllers
                         player.isMoving = true;
                         player.SetAnimationConfiguration(1);
                         break;
+                    case Keys.Escape:
+                        Application.Exit();
+                        break;
                 }
                 player.pressButtonMove = true;
             }

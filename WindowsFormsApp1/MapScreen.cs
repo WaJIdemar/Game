@@ -14,7 +14,7 @@ using Движение.Models;
 
 namespace WindowsFormsApp1
 {
-    public partial class Form1 : Form
+    public partial class MapScreen : Form
     {
         public Image gladiatorSheetRight;
         public Image gladiatorSheetLeft;
@@ -22,7 +22,7 @@ namespace WindowsFormsApp1
         public Point delta;
         public ProgressBar health;
 
-        public Form1()
+        public MapScreen()
         {
             InitializeComponent();
             health = new ProgressBar
