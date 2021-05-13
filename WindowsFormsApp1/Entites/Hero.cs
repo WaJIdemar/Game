@@ -81,8 +81,7 @@ namespace Движение.Entites
                 {
                     if (Health > 0)
                     {
-                        MapController.map[LocationMap.Y, LocationMap.X] = '0';
-                        Health--;
+                        isInBattle = true;
                     }
                     else
                         isAlive = false;

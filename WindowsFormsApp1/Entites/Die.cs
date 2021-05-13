@@ -16,7 +16,7 @@ namespace Движение.Entites
 
         public int Roll()
         {
-            return rnd.Next(num_sides);
+            return rnd.Next(num_sides - 1);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Передвижение_по_карте
 	{
 		public static void Main()
 		{
-			Application.Run(new MenuScreen());
+			Application.Run(new BattleScreen());
 		}
 	}
 }

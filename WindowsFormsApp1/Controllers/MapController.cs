@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using Движение.Entites;
@@ -21,6 +22,7 @@ namespace Движение.Controllers
         public static LinkedListNode<OrangeMonster> drawMonster;
         public static Image background = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Background.jpg"));
+        public static Image pictureMap;
         public static void Init()
         {
             map = GetMap();
@@ -31,6 +33,7 @@ namespace Движение.Controllers
                 new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Chest.png"));
             CreateEntity();
+            CreateMap();
         }
 
         public static char[,] GetMap()
@@ -115,6 +118,61 @@ namespace Движение.Controllers
                     }
                 }
             }
+        }
+
+        private static void CreateMap()
+        {
+            var mapImage = new Bitmap(cellSize * mapWidth, cellSize * mapHeight);
+            var g = Graphics.FromImage(mapImage);
+            for (int i = 0; i < mapWidth; i++)
+            {
+                for (int j = 0; j < mapHeight; j++)
+                {
+                    switch (map[i, j])
+                    {
+
+                        case 'w':
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 96, 0, 20, 20, GraphicsUnit.Pixel);
+                            break;
+
+                        case 'K':
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 170, 0, 20, 20, GraphicsUnit.Pixel);
+                            break;
+
+                        case 'B':
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 96, 75, 20, 20, GraphicsUnit.Pixel);
+                            break;
+
+                        case 'W':
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 170, 75, 20, 20, GraphicsUnit.Pixel);
+                            break;
+
+                        case 'm':
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 170, 30, 20, 20, GraphicsUnit.Pixel);
+                            break;
+
+                        case 'T':
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 120, 75, 20, 20, GraphicsUnit.Pixel);
+                            break;
+
+                        case 'M':
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
+                            break;
+
+                        case 'C':
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
+                            break;
+
+                        case '0':
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
+                            break;
+                    }
+                }
+            }
+            mapImage.Save(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+            .Parent.Parent.Parent.FullName.ToString(), @"Map\Map.png"), ImageFormat.Png);
+            pictureMap = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+            .Parent.Parent.Parent.FullName.ToString(), @"Map\Map.png"));
         }
 
         private static void CreateEntity()
