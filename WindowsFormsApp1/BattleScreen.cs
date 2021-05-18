@@ -42,7 +42,7 @@ namespace Движение
     .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die5.png")),
             new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
     .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die6.png")) };
-        public static void RollCheckSender(TextBox battleLog, PictureBox die1, PictureBox die2, Image[] dies, string name)
+        public static int RollCheckSender(TextBox battleLog, PictureBox die1, PictureBox die2, Image[] dies, string name)
         {
             var die = new Entites.Die();
             var dieValue1 = die.Roll();
@@ -65,6 +65,7 @@ namespace Движение
                 battleLog.AppendLine("У вас выпало " + dieCheck.ToString() + ". "
                     + name + " Полный провал...");
             };
+            return dieCheck;
         }
         private void fontsProjects()
         {
@@ -76,7 +77,7 @@ namespace Движение
             fonts.AddFontFile(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"myFonts\PostModernOne.ttf"));
         }
-        public BattleScreen()
+        public BattleScreen(MapScreen map)
         {
             fontsProjects();
             FormBorderStyle = FormBorderStyle.None;
@@ -169,7 +170,7 @@ namespace Движение
             {
                 Size = new Size(ButtonHeight * 5, ButtonHeight * 5),
                 Location = new Point(Width - ButtonHeight * 5, Height - ButtonHeight * 5),
-                Image = MapController.pictureMap,
+                Image = MiniMapController.GetMiniMap(),
                 SizeMode = PictureBoxSizeMode.StretchImage,
             };
             Controls.Add(miniMap);
@@ -195,22 +196,32 @@ namespace Движение
             Controls.Add(logLabel);
             buttonSword.Click += (sender, args) =>
             {
-                RollCheckSender(battleLog, die1, die2, dies, "Атака мечем.");
+                var result = RollCheckSender(battleLog, die1, die2, dies, "Атака мечем.");
             };
 
             buttonBow.Click += (sender, args) =>
             {
-                RollCheckSender(battleLog, die1, die2, dies, "Атака луком.");
+                var result = RollCheckSender(battleLog, die1, die2, dies, "Атака луком.");
             };
 
             buttonGo.Click += (sender, args) =>
             {
-                RollCheckSender(battleLog, die1, die2, dies, "Побег.");
+                var result = RollCheckSender(battleLog, die1, die2, dies, "Побег.");
+                if (result > 1)
+                {
+                    map.Show();
+                    map.player.LocationMap.X = map.player.LocationMap.X - map.player.lastDirX;
+                    map.player.LocationMap.Y = map.player.LocationMap.Y - map.player.lastDirY;
+                    map.player.isInBattle = false;
+                    map.timer1.Start();
+                    
+                    Close();
+                }
             };
 
             buttonBless.Click += (sender, args) =>
             {
-                RollCheckSender(battleLog, die1, die2, dies, "Благословение.");
+                var result = RollCheckSender(battleLog, die1, die2, dies, "Благословение.");
             };
             Invalidate();
         }

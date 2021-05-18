@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    <Compile Remove="Graphics\**" />
+    <EmbeddedResource Remove="Graphics\**" />
+    <None Remove="Graphics\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Graphics\" />
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>

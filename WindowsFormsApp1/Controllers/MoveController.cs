@@ -31,11 +31,13 @@ namespace Движение.Controllers
                     case Keys.W:
                         player.dirY = -dir;
                         player.isMoving = true;
+                        player.lastDirX = -1;
                         player.SetAnimationConfiguration(1);
                         break;
                     case Keys.S:
                         player.dirY = dir;
                         player.isMoving = true;
+                        player.lastDirY = 1;
                         player.SetAnimationConfiguration(1);
                         break;
                     case Keys.A:

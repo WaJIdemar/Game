@@ -1,4 +1,6 @@
 ﻿using System.Drawing;
+using System.IO;
+using System.Text;
 using Движение.Controllers;
 
 namespace Движение.Entites
@@ -14,8 +16,10 @@ namespace Движение.Entites
         public int dirX;
         public int dirY;
         public int lastDirX = 0;
-        private int counter= 0;
+        public int lastDirY = 0;
+        private int counter = 0;
         public bool isMoving;
+        public int visibility = 3;
 
         public bool isInBattle;
 
@@ -30,13 +34,13 @@ namespace Движение.Entites
         public int attackFrames;
         public int deathFrames;
 
-        public Image spriteSheetLeft;
-        public Image spriteSheetRigth;
+        public string pathSpriteSheetLeft;
+        public string pathSpriteSheetRigth;
 
         public int size;
 
         public Hero(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
-            Image spriteSheetLeft, Image spriteSheetRigth)
+            string spriteSheetLeft, string spriteSheetRigth)
         {
             this.posX = posX;
             this.posY = posY;
@@ -44,10 +48,10 @@ namespace Движение.Entites
             this.idleFrames = idleFrames;
             this.attackFrames = attackFrames;
             this.deathFrames = deathFrames;
-            this.spriteSheetLeft = spriteSheetLeft;
-            this.spriteSheetRigth = spriteSheetRigth;
+            this.pathSpriteSheetLeft = spriteSheetLeft;
+            this.pathSpriteSheetRigth = spriteSheetRigth;
             delta = new Point(0, 0);
-            size = 30;
+            size = 28;
             currentAnimation = 0;
             currentFrame = 0;
             currentLimit = idleFrames;
@@ -121,16 +125,30 @@ namespace Движение.Entites
 
         public void PlayAnimation(Graphics g, int posX, int posY, int size)
         {
+            var pathToSprite = new StringBuilder();
+            var state = new StringBuilder();
             if (currentFrame < currentLimit - 1)
                 currentFrame++;
             else currentFrame = 0;
+            if (currentAnimation == 0)
+                state.Append(@"Stand\");
+            else if (currentAnimation == 1)
+                state.Append(@"Run\");
             if ((currentAnimation == 0 || currentAnimation == 1) && (dirX > 0
                 || lastDirX > 0))
-                g.DrawImage(spriteSheetRigth, new Rectangle(new Point(posX, posY), new Size(size, size)),
-                    32 * currentFrame, 32 * currentAnimation, size, size, GraphicsUnit.Pixel);
+            {
+                pathToSprite.Append(pathSpriteSheetRigth + state + currentFrame.ToString() + ".png");
+                var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
+                pathToSprite.ToString()));
+                g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
+            }
             else
-                g.DrawImage(spriteSheetLeft, new Rectangle(new Point(posX, posY), new Size(size, size)),
-                    32 * currentFrame, 32 * currentAnimation, size, size, GraphicsUnit.Pixel);
+            {
+                pathToSprite.Append(pathSpriteSheetLeft + state + currentFrame.ToString() + ".png");
+                var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
+                pathToSprite.ToString()));
+                g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
+            }
         }
     }
 }

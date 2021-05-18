@@ -17,11 +17,12 @@ namespace WindowsFormsApp1
 {
     public partial class MapScreen : Form
     {
-        public Image gladiatorSheetRight;
-        public Image gladiatorSheetLeft;
+        public string gladiatorSheetRight;
+        public string gladiatorSheetLeft;
         public Hero player;
         public Point delta;
         public ProgressBar health;
+        public bool battleCheck = false;
 
         public MapScreen()
         {
@@ -49,11 +50,11 @@ namespace WindowsFormsApp1
             Width = MapController.GetWidth();
             Height = MapController.GetHeight();
 
-            gladiatorSheetRight = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Gladiator_Right.png"));
-            gladiatorSheetLeft = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Gladiator_Left.png"));
-            player = new Hero((this.Width / 3 + 4), (this.Height / 9 + 7),
+            gladiatorSheetRight = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Right\");
+            gladiatorSheetLeft = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Left\");
+            player = new Hero(MapController.cellSize * MapController.mapWidth / 2 - 14, MapController.cellSize * MapController.mapHeight / 2 - 15,
                 HeroModels.idleFrames, HeroModels.runFrames, HeroModels.attackFrames,
                 HeroModels.deathFrames, gladiatorSheetLeft, gladiatorSheetRight);
             MoveController.AddPlayer(player);
@@ -70,7 +71,8 @@ namespace WindowsFormsApp1
         {
             if (player.isInBattle)
             {
-                var battleScreen = new BattleScreen();
+                MiniMapController.Init(player);
+                var battleScreen = new BattleScreen(this);
                 Hide();
                 battleScreen.Show();
                 timer1.Stop();
@@ -92,9 +94,8 @@ namespace WindowsFormsApp1
         private void OnPaint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            g.ScaleTransform(4, 4);
             g.FillRectangle(Brushes.Black, new Rectangle(0, 0, this.Width, this.Height));
-            MapController.DrawMap(g, player.delta, this.Width, this.Height);
+            MapController.DrawMap(g, player);
             if (player.isAlive)
                 player.PlayAnimation(g, player.posX, player.posY, player.size);
         }
