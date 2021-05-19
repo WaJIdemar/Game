@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using WindowsFormsApp1;
 using Движение.Controllers;
+using Движение.Entites;
 
 namespace Движение
 {
@@ -29,6 +32,9 @@ namespace Движение
         const int ButtonWidth = 384;
         const int ButtonHeight = 54;
         bool closeFlag = false;
+        ProgressBar heroHealth;
+        ICharacter hero;
+        MapScreen mapS;
         PrivateFontCollection fonts;
         readonly Image[] dies = new Image[6] { new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
     .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die1.png")),
@@ -42,31 +48,55 @@ namespace Движение
     .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die5.png")),
             new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
     .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die6.png")) };
-        public static int RollCheckSender(TextBox battleLog, PictureBox die1, PictureBox die2, Image[] dies, string name)
+
+        public static int RollCheckSender(TextBox battleLog, PictureBox die1, PictureBox die2, Image[] dies)
         {
-            var die = new Entites.Die();
+            var die = new Die();
             var dieValue1 = die.Roll();
             var dieValue2 = die.Roll();
             die1.Image = dies[dieValue1];
             die2.Image = dies[dieValue2];
-            var dieCheck = dieValue1 + dieValue2 + 2;
-            if (dieCheck > 9)
-            {
-                battleLog.AppendLine("У вас выпало " + dieCheck.ToString() + ". "
-                    + name + " Полный успех!");
-            }
-            else if (dieCheck < 10 && dieCheck > 5)
-            {
-                battleLog.AppendLine("У вас выпало " + dieCheck.ToString() + ". "
-                    + name + " Частичный успех!");
-            }
-            else
-            {
-                battleLog.AppendLine("У вас выпало " + dieCheck.ToString() + ". "
-                    + name + " Полный провал...");
-            };
-            return dieCheck;
+            return dieValue1 + dieValue2 + 2;
         }
+
+        public void EndBattle(string message, bool isWin)
+        {
+            Controls.Clear();
+            var endLabel = new Label
+            {
+                Size = new Size(ButtonWidth, 2 * ButtonHeight),
+                Location = new Point(Width / 2 - ButtonWidth / 2, Height / 2 - ButtonHeight),
+                Text = message,
+                ForeColor = Color.Black,
+                Font = new Font(fonts.Families[0], 15),
+                BorderStyle = BorderStyle.FixedSingle,
+                TextAlign = ContentAlignment.MiddleCenter,
+            };
+            var endButton = new Button
+            {
+                Size = new Size(ButtonWidth, ButtonHeight),
+                Location = new Point(Width/2-ButtonWidth/2, endLabel.Bottom),
+                Text = isWin ? "Собрать добычу." : "Уйти на покой.",
+                ForeColor = Color.Black,
+                Font = new Font(fonts.Families[0], 15),
+            };
+            endButton.Click += (sender, args) =>
+            {
+                if (isWin)
+                {
+                    MapController.map[mapS.player.LocationMap.Y, mapS.player.LocationMap.X] = '0';
+                    mapS.Show();
+                    mapS.player.isInBattle = false;
+                    mapS.timer1.Start();
+                    Close();
+                }
+                else
+                    mapS.Close();
+            };
+            Controls.Add(endLabel);
+            Controls.Add(endButton);
+        }
+
         private void fontsProjects()
         {
             fonts = new PrivateFontCollection();
@@ -77,8 +107,23 @@ namespace Движение
             fonts.AddFontFile(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"myFonts\PostModernOne.ttf"));
         }
-        public BattleScreen(MapScreen map)
+        #region Инициализация экрана
+        public BattleScreen(MapScreen map, ICharacter character1, ICharacter character2)
         {
+            mapS = map;
+            hero = character1;
+            heroHealth = new ProgressBar
+            {
+                Location = map.health.Location,
+                Size = map.health.Size,
+                Maximum = map.health.Maximum,
+                BackColor = map.health.BackColor,
+                Value = map.health.Value,
+                ForeColor = map.health.ForeColor,
+                Step = map.health.Step,
+                Style = map.health.Style
+            };
+            Controls.Add(heroHealth);
             fontsProjects();
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
@@ -194,35 +239,104 @@ namespace Движение
                 Text = "Лог боя"
             };
             Controls.Add(logLabel);
+            //Таймер обновления анимаций
+            var battleTimer = new Timer();
+            battleTimer.Interval = 100;
+            //Блок для анимации героя
+            var picHero = new PictureBox
+            {
+                Size = die1.Size,
+                Location = new Point(die1.Location.X,
+                die1.Location.Y - ButtonHeight - die1.Size.Height),
+                Image = hero.nowSprite,
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                BackColor = Color.Transparent,
+            };
+            Controls.Add(picHero);
+            //Блок для анимации монстра
+            var picMon = new PictureBox
+            {
+                Size = die1.Size,
+                Location = new Point(die1.Location.X + +die1.Size.Width + 2 * ButtonWidth,
+                die1.Location.Y - ButtonHeight - die1.Size.Height),
+                Image = character2.nowSprite,
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                BackColor = Color.Transparent,
+            };
+            Controls.Add(picMon);
             buttonSword.Click += (sender, args) =>
             {
-                var result = RollCheckSender(battleLog, die1, die2, dies, "Атака мечем.");
+                var result = RollCheckSender(battleLog, die1, die2, dies);
+                if (result > 6)
+                {
+                    if (result < 10)
+                    {
+                        character1.Health--;
+                        EndBattle("Вы зарубили его, но на последок получили 1 урона!\nОсталось только собрать лут...", true);
+                    }
+                    EndBattle("Вы зарубили его!\nОсталось только собрать лут...", true);
+                }
+                else
+                {
+                    character1.Health--;
+                    battleLog.AppendLine("При попытке нанести удар мечем вы выкинули " + result.ToString()
+                        + " и получили 1 урон! Монстр отбил атаку и контратаковал.");
+                }
             };
 
             buttonBow.Click += (sender, args) =>
             {
-                var result = RollCheckSender(battleLog, die1, die2, dies, "Атака луком.");
+                var result = RollCheckSender(battleLog, die1, die2, dies);
+                if (result > 6)
+                {
+                    EndBattle("Вы застрелили его!\nОсталось только собрать лут...", true);
+                }
+                else
+                {
+                    character1.Health--;
+                    battleLog.AppendLine("При попытке выстрела из лука вы выкинули " + result.ToString()
+                        + " и получили 1 урон! Монстр был более ловок.");
+                }
             };
 
             buttonGo.Click += (sender, args) =>
             {
-                var result = RollCheckSender(battleLog, die1, die2, dies, "Побег.");
-                if (result > 1)
+                var result = RollCheckSender(battleLog, die1, die2, dies);
+                if (result > 6)
                 {
+                    if (result < 10)
+                        character1.Health--;
                     map.Show();
-                    map.player.LocationMap.X = map.player.LocationMap.X - map.player.lastDirX;
-                    map.player.LocationMap.Y = map.player.LocationMap.Y - map.player.lastDirY;
+                    MapController.BackStep();
                     map.player.isInBattle = false;
                     map.timer1.Start();
-                    
                     Close();
+                }
+                else
+                {
+                    character1.Health--;
+                    battleLog.AppendLine("При попытке побега вы выкинули " + result.ToString()
+                        + " и получили 1 урон! Монстр обрезал тот путь.");
                 }
             };
 
             buttonBless.Click += (sender, args) =>
             {
-                var result = RollCheckSender(battleLog, die1, die2, dies, "Благословение.");
+                var result = RollCheckSender(battleLog, die1, die2, dies);
             };
+            battleTimer.Tick += new EventHandler(Update);
+            battleTimer.Start();
+            Invalidate();
+        }
+        #endregion
+
+        public void Update(object sender, EventArgs e)
+        {
+            heroHealth.Value = hero.Health;
+            if (heroHealth.Value == 0)
+            {
+                EndBattle("Это была последняя капля...\n Вы УБИТЫ!", false);
+            }
             Invalidate();
         }
     }

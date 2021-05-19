@@ -8,9 +8,7 @@ namespace Движение.Controllers
 {
     public static class MoveController
     {
-        private static Hero player;
-
-        private const int dir = 3; 
+        private static Hero player; 
 
         public static void AddPlayer(Hero entity)
         {
@@ -24,6 +22,7 @@ namespace Движение.Controllers
 
         public static void OnPress(object sender, KeyEventArgs e)
         {
+            var dir = player.Size / 10;
             if (!player.pressButtonMove && !player.isMoving && player.isAlive)
             {
                 switch (e.KeyCode)
@@ -31,7 +30,7 @@ namespace Движение.Controllers
                     case Keys.W:
                         player.dirY = -dir;
                         player.isMoving = true;
-                        player.lastDirX = -1;
+                        player.lastDirY = -1;
                         player.SetAnimationConfiguration(1);
                         break;
                     case Keys.S:
@@ -43,6 +42,7 @@ namespace Движение.Controllers
                     case Keys.A:
                         player.dirX = -dir;
                         player.lastDirX = -1;
+                        player.lastDirY = 0;
                         player.isMoving = true;
                         player.SetAnimationConfiguration(1);
                         break;

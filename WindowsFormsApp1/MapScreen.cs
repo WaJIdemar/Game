@@ -23,6 +23,7 @@ namespace WindowsFormsApp1
         public Point delta;
         public ProgressBar health;
         public bool battleCheck = false;
+        public int sqSize = 50;
 
         public MapScreen()
         {
@@ -30,7 +31,7 @@ namespace WindowsFormsApp1
             health = new ProgressBar
             {
                 Location = new Point(0, 0),
-                Size = new Size(90, 30)
+                Size = new Size(200, 30)
             };
             Controls.Add(health);
             timer1.Interval = 1;
@@ -46,19 +47,19 @@ namespace WindowsFormsApp1
         {
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
-            MapController.Init();
-            Width = MapController.GetWidth();
-            Height = MapController.GetHeight();
 
             gladiatorSheetRight = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Right\");
             gladiatorSheetLeft = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Left\");
-            player = new Hero(MapController.cellSize * MapController.mapWidth / 2 - 14, MapController.cellSize * MapController.mapHeight / 2 - 15,
+            player = new Hero(10 * sqSize, 10 * sqSize,
                 HeroModels.idleFrames, HeroModels.runFrames, HeroModels.attackFrames,
-                HeroModels.deathFrames, gladiatorSheetLeft, gladiatorSheetRight);
+                HeroModels.deathFrames, gladiatorSheetLeft, gladiatorSheetRight, sqSize);
+            MapController.Init(player);
+            Width = MapController.GetWidth();
+            Height = MapController.GetHeight();
             MoveController.AddPlayer(player);
-            health.Maximum = 4;
+            health.Maximum = 25;
             health.BackColor = Color.Black;
             health.Value = player.Health;
             health.ForeColor = Color.Red;
@@ -72,7 +73,7 @@ namespace WindowsFormsApp1
             if (player.isInBattle)
             {
                 MiniMapController.Init(player);
-                var battleScreen = new BattleScreen(this);
+                var battleScreen = new BattleScreen(this, player, player.whoInBattle);
                 Hide();
                 battleScreen.Show();
                 timer1.Stop();
@@ -87,6 +88,7 @@ namespace WindowsFormsApp1
             {
                 timer1.Interval = 500;
                 player.SetAnimationConfiguration(0);
+                health.Value = player.Health;
             }
             Invalidate();
         }
@@ -97,7 +99,7 @@ namespace WindowsFormsApp1
             g.FillRectangle(Brushes.Black, new Rectangle(0, 0, this.Width, this.Height));
             MapController.DrawMap(g, player);
             if (player.isAlive)
-                player.PlayAnimation(g, player.posX, player.posY, player.size);
+                player.PlayAnimation(g, player.posX, player.posY, player.Size);
         }
     }
 }

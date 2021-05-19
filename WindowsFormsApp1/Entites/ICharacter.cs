@@ -12,6 +12,8 @@ namespace Движение.Entites
         void ResetMove();
 
         int Health { get; set; }
+        int Size { get; set; }
+        Image nowSprite { get; set; }
 
         void PlayAnimation(Graphics g, int posX, int posY, int size);
 

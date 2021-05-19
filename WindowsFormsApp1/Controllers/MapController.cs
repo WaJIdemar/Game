@@ -14,7 +14,7 @@ namespace Движение.Controllers
         public const int mapHeight = 21;
         public static HashSet<char> stop = new HashSet<char>(new char[] { 'w', 'W' });
         public const int mapWidth = 21;
-        public static int cellSize = 30;
+        public static int cellSize;
         public static char[,] map = new char[mapHeight, mapWidth];
         public static Image spriteSheet;
         public static Image spriteChest;
@@ -23,10 +23,15 @@ namespace Движение.Controllers
         public static Image background = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Background.jpg"));
         public static Image pictureMap;
+        public static Hero Hero;
+        public static ICharacter[,] characters;
 
-        public static void Init()
+        public static void Init(Hero hero)
         {
+            characters = new ICharacter[mapHeight, mapWidth];
             map = GetMap();
+            Hero = hero;
+            cellSize = hero.Size;
             spriteSheet =
                new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Forest.png"));
@@ -100,10 +105,11 @@ namespace Движение.Controllers
                         break;
 
                     case 'M':
-                        drawMonster.Value.posX = point.X * cellSize - player.delta.X; 
+                        drawMonster.Value.posX = point.X * cellSize - player.delta.X;
                         drawMonster.Value.posY = point.Y * cellSize - player.delta.Y;
                         g.DrawImage(spriteSheet, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
-                        drawMonster.Value.PlayAnimation(g, drawMonster.Value.posX, drawMonster.Value.posY, drawMonster.Value.size);
+                        drawMonster.Value.PlayAnimation(g, drawMonster.Value.posX, drawMonster.Value.posY, drawMonster.Value.Size);
+                        characters[point.Y, point.X] = drawMonster.Value;
                         drawMonster = drawMonster.Next;
                         break;
 
@@ -192,7 +198,7 @@ namespace Движение.Controllers
                     if (map[i, j] == 'M')
                         monsters.AddLast(new OrangeMonster(j * cellSize, i * cellSize, MonsterModels.idleFrames, MonsterModels.runFrames, MonsterModels.deathFrames,
                MonsterModels.deathFrames, Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-               .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Orange\Stand\"), new Point(i, j)));
+               .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Orange\Stand\"), new Point(i, j), Hero.Size));
                 }
             }
         }
@@ -354,6 +360,22 @@ namespace Движение.Controllers
             }
             hashSet.Remove(wall);
             return hashSet;
+        }
+
+        public static void BackStep()
+        {
+            if (Hero.delta.Y != 0)
+            {
+                Hero.LocationMap.Y = Hero.LocationMap.Y - Hero.lastDirY;
+                Hero.delta.Y = Hero.delta.Y - cellSize * Hero.lastDirY;
+            }
+            else
+            {
+                Hero.LocationMap.X = Hero.LocationMap.X - Hero.lastDirX;
+                Hero.delta.X = Hero.delta.X - cellSize * Hero.lastDirX;
+            }
+
+
         }
 
         public static int GetWidth()

@@ -11,6 +11,7 @@ namespace Движение.Entites
         public int posX;
         public int posY;
         public int Health { get; set; }
+        public Image nowSprite { get; set; }
         public Point LocationMap;
 
         public int currentAnimation;
@@ -24,10 +25,10 @@ namespace Движение.Entites
 
         public string pathToSprites;
 
-        public int size;
+        public int Size { get; set; }
 
         public OrangeMonster(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
-            string pathToSprites, Point locationMap)
+            string pathToSprites, Point locationMap, int size)
         {
             this.posX = posX;
             this.posY = posY;
@@ -36,7 +37,7 @@ namespace Движение.Entites
             this.attackFrames = attackFrames;
             this.deathFrames = deathFrames;
             this.pathToSprites = pathToSprites;
-            size = 30;
+            this.Size = size;
             currentAnimation = 0;
             currentFrame = 0;
             currentLimit = idleFrames;
@@ -59,7 +60,7 @@ namespace Движение.Entites
             var spriteOrangeMonster =
                 new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                 currentPathToSprite.ToString()));
-
+            nowSprite = spriteOrangeMonster;
             g.DrawImage(spriteOrangeMonster, new Rectangle(new Point(posX, posY), new Size(size, size)));
         }
 

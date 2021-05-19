@@ -20,9 +20,9 @@ namespace Движение.Entites
         private int counter = 0;
         public bool isMoving;
         public int visibility = 3;
-
+        public ICharacter whoInBattle = null;
         public bool isInBattle;
-
+        public Image nowSprite { get; set; }
         public bool pressButtonMove;
 
         public int currentAnimation;
@@ -37,10 +37,10 @@ namespace Движение.Entites
         public string pathSpriteSheetLeft;
         public string pathSpriteSheetRigth;
 
-        public int size;
+        public int Size { get; set; }
 
         public Hero(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
-            string spriteSheetLeft, string spriteSheetRigth)
+            string spriteSheetLeft, string spriteSheetRigth, int size)
         {
             this.posX = posX;
             this.posY = posY;
@@ -51,14 +51,14 @@ namespace Движение.Entites
             this.pathSpriteSheetLeft = spriteSheetLeft;
             this.pathSpriteSheetRigth = spriteSheetRigth;
             delta = new Point(0, 0);
-            size = 28;
+            this.Size = size;
             currentAnimation = 0;
             currentFrame = 0;
             currentLimit = idleFrames;
             pressButtonMove = false;
             LocationMap = new Point(MapController.mapWidth / 2, MapController.mapHeight / 2);
             isInBattle = false;
-            Health = 4;
+            Health = 25;
             isAlive = true;
         }
 
@@ -66,8 +66,8 @@ namespace Движение.Entites
         {
             delta.X += dirX;
             delta.Y += dirY;
-            counter += 3;
-            if (counter == 30)
+            counter += 5;
+            if (counter == 50)
             {
                 if (dirX > 0)
                     LocationMap.X++;
@@ -83,6 +83,7 @@ namespace Движение.Entites
                 }
                 else if (MapController.map[LocationMap.Y, LocationMap.X] == 'M')
                 {
+                    whoInBattle = MapController.characters[LocationMap.Y, LocationMap.X];
                     if (Health > 0)
                     {
                         isInBattle = true;
@@ -140,6 +141,7 @@ namespace Движение.Entites
                 pathToSprite.Append(pathSpriteSheetRigth + state + currentFrame.ToString() + ".png");
                 var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                 pathToSprite.ToString()));
+                nowSprite = image;
                 g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
             }
             else
@@ -147,6 +149,7 @@ namespace Движение.Entites
                 pathToSprite.Append(pathSpriteSheetLeft + state + currentFrame.ToString() + ".png");
                 var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                 pathToSprite.ToString()));
+                nowSprite = image;
                 g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
             }
         }
