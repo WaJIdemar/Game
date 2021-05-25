@@ -30,8 +30,6 @@ namespace Движение.Entites
 
         public int idleFrames;
         public int runFrames;
-        public int attackFrames;
-        public int deathFrames;
 
         public string pathSpriteSheetLeft;
         public string pathSpriteSheetRigth;
@@ -43,15 +41,12 @@ namespace Движение.Entites
         public int posX { get; set ; }
         public int posY { get; set ; }
 
-        public Hero(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
-            int size)
+        public Hero(int posX, int posY, int idleFrames, int runFrames, int size)
         {
             this.posX = posX;
             this.posY = posY;
             this.runFrames = runFrames;
             this.idleFrames = idleFrames;
-            this.attackFrames = attackFrames;
-            this.deathFrames = deathFrames;
             delta = new Point(0, 0);
             Size = size;
             currentAnimation = 0;
@@ -100,7 +95,7 @@ namespace Движение.Entites
                 else if (MapController.map[LocationMap.Y, LocationMap.X] == 'M' ||
                     MapController.map[LocationMap.Y, LocationMap.X] == 'm')
                 {
-                    whoInBattle = MapController.characters[LocationMap.Y, LocationMap.X];
+                    whoInBattle = MapController.monsters[(LocationMap.X, LocationMap.Y)];
                     if (Health > 0)
                     {
                         isInBattle = true;
@@ -132,12 +127,6 @@ namespace Движение.Entites
                     break;
                 case 1:
                     currentLimit = runFrames;
-                    break;
-                case 2:
-                    currentLimit = attackFrames;
-                    break;
-                case 4:
-                    currentLimit = deathFrames;
                     break;
             }
         }

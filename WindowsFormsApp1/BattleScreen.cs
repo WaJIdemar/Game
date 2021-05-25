@@ -35,7 +35,7 @@ namespace Движение
         readonly Image[] dices = new Image[6] { new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
     .Parent.Parent.Parent.FullName.ToString(), @"Sprites\dice\dice1.png")),
             new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\dice\dice.png")),
+    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\dice\dice2.png")),
             new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
     .Parent.Parent.Parent.FullName.ToString(), @"Sprites\dice\dice3.png")),
             new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())

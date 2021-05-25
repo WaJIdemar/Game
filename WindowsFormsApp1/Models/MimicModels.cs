@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Движение.Models
 {
-    public static class MonsterModels
+    public static class MimicModels
     {
-        public static int idleFrames = 20;
+        public static int idleFrames = 90;
     }
 }

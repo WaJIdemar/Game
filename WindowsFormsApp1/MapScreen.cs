@@ -18,7 +18,6 @@ namespace WindowsFormsApp1
     public partial class MapScreen : Form
     {
         public Hero player;
-        public Point delta;
         public ProgressBar health;
         public PictureBox heroFace;
         public bool battleCheck = false;
@@ -57,8 +56,7 @@ namespace WindowsFormsApp1
 
 
             player = new Hero(MapController.mapWidth / 2 * sqSize, MapController.mapHeight / 2 * sqSize,
-                HeroModels.idleFrames, HeroModels.runFrames, HeroModels.attackFrames,
-                HeroModels.deathFrames, sqSize);
+                HeroModels.idleFrames, HeroModels.runFrames, sqSize);
             MapController.Init(player);
             Width = MapController.GetWidth();
             Height = MapController.GetHeight();

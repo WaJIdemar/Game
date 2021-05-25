@@ -18,19 +18,18 @@ namespace Движение.Controllers
         public static char[,] map = new char[mapHeight, mapWidth];
         public static Image spriteSheet;
         public static Image spriteChest;
-        public static LinkedList<ICharacter> monsters;
-        public static LinkedListNode<ICharacter> drawMonster;
+        public static Dictionary<(int, int), ICharacter> monsters;
         public static Image background = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Background.jpg"));
         public static Image pictureMap;
         public static Hero Hero;
         public static Image spriteGround;
         public static Image spriteWall;
-        public static ICharacter[,] characters;
+        public static Image spriteWater;
+        public static Image spriteKnight;
 
         public static void Init(Hero hero)
         {
-            characters = new ICharacter[mapHeight, mapWidth];
             map = GetMap();
             Hero = hero;
             cellSize = hero.Size;
@@ -43,8 +42,11 @@ namespace Движение.Controllers
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Object in Map\w.png"));
             spriteChest = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Object in Map\C.png"));
+            spriteWater = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Object in Map\Water.png"));
+            spriteKnight = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Object in Map\K.png"));
             CreateEntity();
-            CreateMap();
         }
 
         /* 
@@ -70,7 +72,7 @@ namespace Движение.Controllers
                 { 'w', 'C', 'w', 'w', '0', '0', '0', '0', 'M', '0', '0', '0', 'M', 'w', '0', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
                 { 'w', '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'C', 'w', 'w', 'w', 'w', 'w', 'w', '0', 'w'},
                 { 'w', 'M', 'w', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', 'm', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
-                { 'w', '0', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', '0', '0', '0', 'M', '0', '0', '0', '0', '0', '0', '0', 'w'},
+                { 'w', '0', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', '0', '0', 'K', 'M', '0', '0', '0', '0', '0', '0', '0', 'w'},
                 { 'w', '0', 'w', 'w', 'w', '0', '0', 'w', '0', 'w', '0', '0', '0', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
                 { 'w', '0', '0', 'w', 'w', '0', '0', 'w', '0', 'w', 'w', '0', 'w', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0', 'w'},
                 { 'w', 'w', '0', '0', 'w', 'w', 'M', 'w', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', 'w'},
@@ -88,19 +90,17 @@ namespace Движение.Controllers
 
         public static void DrawMap(Graphics g, Hero player)
         {
-            drawMonster = monsters.First;
-
             foreach (var point in FindFieldView(player))
             {
                 switch (map[point.Y, point.X])
                 {
-
                     case 'w':
                         g.DrawImage(spriteWall, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
                         break;
 
                     case 'K':
-                        g.DrawImage(spriteSheet, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)), 170, 0, 20, 20, GraphicsUnit.Pixel);
+                        g.DrawImage(spriteGround, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
+                        g.DrawImage(spriteKnight, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
                         break;
 
                     case 'B':
@@ -108,16 +108,15 @@ namespace Движение.Controllers
                         break;
 
                     case 'W':
-                        g.DrawImage(spriteSheet, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)), 170, 75, 20, 20, GraphicsUnit.Pixel);
+                        g.DrawImage(spriteGround, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
+                        g.DrawImage(spriteWater, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
                         break;
 
                     case 'M':
-                        drawMonster.Value.posX = point.X * cellSize - player.delta.X;
-                        drawMonster.Value.posY = point.Y * cellSize - player.delta.Y;
+                        monsters[(point.X, point.Y)].posX = point.X * cellSize - player.delta.X;
+                        monsters[(point.X, point.Y)].posY = point.Y * cellSize - player.delta.Y;
                         g.DrawImage(spriteGround, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
-                        drawMonster.Value.PlayAnimation(g, drawMonster.Value.posX, drawMonster.Value.posY, drawMonster.Value.Size);
-                        characters[point.Y, point.X] = drawMonster.Value;
-                        drawMonster = drawMonster.Next;
+                        monsters[(point.X, point.Y)].PlayAnimation(g, monsters[(point.X, point.Y)].posX, monsters[(point.X, point.Y)].posY, monsters[(point.X, point.Y)].Size);
                         break;
 
                     case 'C':
@@ -126,12 +125,10 @@ namespace Движение.Controllers
                         break;
 
                     case 'm':
-                        drawMonster.Value.posX = point.X * cellSize - player.delta.X;
-                        drawMonster.Value.posY = point.Y * cellSize - player.delta.Y;
+                        monsters[(point.X, point.Y)].posX = point.X * cellSize - player.delta.X;
+                        monsters[(point.X, point.Y)].posY = point.Y * cellSize - player.delta.Y;
                         g.DrawImage(spriteGround, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
-                        drawMonster.Value.PlayAnimation(g, drawMonster.Value.posX, drawMonster.Value.posY, drawMonster.Value.Size);
-                        characters[point.Y, point.X] = drawMonster.Value;
-                        drawMonster = drawMonster.Next;
+                        monsters[(point.X, point.Y)].PlayAnimation(g, monsters[(point.X, point.Y)].posX, monsters[(point.X, point.Y)].posY, monsters[(point.X, point.Y)].Size);
                         break;
 
                     case 'T':
@@ -145,76 +142,17 @@ namespace Движение.Controllers
             }
         }
 
-        private static void CreateMap()
-        {
-            var mapImage = new Bitmap(cellSize * mapWidth, cellSize * mapHeight);
-            var g = Graphics.FromImage(mapImage);
-            for (int i = 0; i < mapWidth; i++)
-            {
-                for (int j = 0; j < mapHeight; j++)
-                {
-                    switch (map[i, j])
-                    {
-
-                        case 'w':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 96, 0, 20, 20, GraphicsUnit.Pixel);
-                            break;
-
-                        case 'K':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 170, 0, 20, 20, GraphicsUnit.Pixel);
-                            break;
-
-                        case 'B':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 96, 75, 20, 20, GraphicsUnit.Pixel);
-                            break;
-
-                        case 'W':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 170, 75, 20, 20, GraphicsUnit.Pixel);
-                            break;
-
-                        case 'm':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
-                            break;
-
-                        case 'T':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 120, 75, 20, 20, GraphicsUnit.Pixel);
-                            break;
-
-                        case 'M':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
-                            break;
-
-                        case 'C':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
-                            break;
-
-                        case '0':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
-                            break;
-                    }
-                }
-            }
-            mapImage.Save(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-            .Parent.Parent.Parent.FullName.ToString(), @"Map\Map.png"), ImageFormat.Png);
-            pictureMap = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-            .Parent.Parent.Parent.FullName.ToString(), @"Map\Map.png"));
-        }
-
         private static void CreateEntity()
         {
-            monsters = new LinkedList<ICharacter>();
-            for (int i = 0; i < mapWidth; i++)
+            monsters = new Dictionary<(int, int), ICharacter>();
+            for (int i = 0; i < mapHeight; i++)
             {
-                for (int j = 0; j < mapHeight; j++)
+                for (int j = 0; j < mapWidth; j++)
                 {
                     if (map[i, j] == 'M')
-                        monsters.AddLast(new OrangeMonster(j * cellSize, i * cellSize, MonsterModels.idleFrames, MonsterModels.runFrames, MonsterModels.deathFrames,
-               MonsterModels.deathFrames, Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-               .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Orange\Stand\"), new Point(i, j), Hero.Size));
+                        monsters.Add((j, i), new OrangeMonster(j * cellSize, i * cellSize, MonsterModels.idleFrames, new Point(j, i), Hero.Size));
                     else if (map[i, j] == 'm')
-                        monsters.AddLast(new MimicMonster(j * cellSize, i * cellSize, MonsterModels.idleFrames, MonsterModels.runFrames, MonsterModels.deathFrames,
-               MonsterModels.deathFrames, Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-               .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Mimic\Stand\"), new Point(i, j), Hero.Size));
+                        monsters.Add((j, i), new MimicMonster(j * cellSize, i * cellSize, MimicModels.idleFrames, new Point(j, i), Hero.Size));
                 }
             }
         }

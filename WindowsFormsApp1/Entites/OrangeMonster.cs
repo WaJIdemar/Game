@@ -20,24 +20,18 @@ namespace Движение.Entites
         public int currentLimit;
 
         public int idleFrames;
-        public int runFrames;
-        public int attackFrames;
-        public int deathFrames;
-
+       
         public string pathToSprites;
 
         public int Size { get; set; }
 
-        public OrangeMonster(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
-            string pathToSprites, Point locationMap, int size)
+        public OrangeMonster(int posX, int posY, int idleFrames, Point locationMap, int size)
         {
             this.posX = posX;
             this.posY = posY;
-            this.runFrames = runFrames;
             this.idleFrames = idleFrames;
-            this.attackFrames = attackFrames;
-            this.deathFrames = deathFrames;
-            this.pathToSprites = pathToSprites;
+            this.pathToSprites = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+               .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Orange\Stand\");
             Size = size;
             currentAnimation = 0;
             currentFrame = 0;
@@ -81,15 +75,6 @@ namespace Движение.Entites
             {
                 case 0:
                     currentLimit = idleFrames;
-                    break;
-                case 1:
-                    currentLimit = runFrames;
-                    break;
-                case 2:
-                    currentLimit = attackFrames;
-                    break;
-                case 4:
-                    currentLimit = deathFrames;
                     break;
             }
         }

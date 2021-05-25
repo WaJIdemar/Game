@@ -22,24 +22,20 @@ namespace Движение.Entites
         public int currentLimit;
 
         public int idleFrames;
-        public int runFrames;
-        public int attackFrames;
-        public int deathFrames;
+       
+        public int countFrame = 0;
 
-        public MimicMonster(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
-            string pathToSprites, Point locationMap, int size)
+        public MimicMonster(int posX, int posY, int idleFrames, Point locationMap, int size)
         {
             this.posX = posX;
             this.posY = posY;
-            this.runFrames = runFrames;
-            this.idleFrames = idleFrames;
-            this.attackFrames = attackFrames;
-            this.deathFrames = deathFrames;
-            this.pathToSprites = pathToSprites;
+            this.idleFrames = idleFrames / 10;
+            pathToSprites = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+               .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Mimic\Stand\");
             Size = size;
             currentAnimation = 0;
             currentFrame = 0;
-            currentLimit = idleFrames;
+            currentLimit = idleFrames/10;
             LocationMap = locationMap;
             SpriteFace = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Mimic\Face.png"));
@@ -55,9 +51,16 @@ namespace Движение.Entites
 
         public void PlayAnimation(Graphics g, int posX, int posY, int size)
         {
-            if (currentFrame < currentLimit - 1)
-                currentFrame++;
-            else currentFrame = 0;
+            if (countFrame == 10)
+            {
+                if (currentFrame < currentLimit - 1)
+                    currentFrame++;
+                else currentFrame = 0;
+                countFrame = 0;
+            }
+            else
+                countFrame++;
+           
 
             var currentPathToSprite = new StringBuilder(pathToSprites);
             currentPathToSprite.Append(currentFrame.ToString() + ".png");
@@ -79,15 +82,6 @@ namespace Движение.Entites
             {
                 case 0:
                     currentLimit = idleFrames;
-                    break;
-                case 1:
-                    currentLimit = runFrames;
-                    break;
-                case 2:
-                    currentLimit = attackFrames;
-                    break;
-                case 4:
-                    currentLimit = deathFrames;
                     break;
             }
         }
