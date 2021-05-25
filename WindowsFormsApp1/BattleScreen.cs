@@ -32,18 +32,18 @@ namespace Движение
         ICharacter hero;
         ICharacter monster;
         PrivateFontCollection fonts;
-        readonly Image[] dies = new Image[6] { new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die1.png")),
+        readonly Image[] dices = new Image[6] { new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\dice\dice1.png")),
             new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die2.png")),
+    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\dice\dice.png")),
             new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die3.png")),
+    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\dice\dice3.png")),
             new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die4.png")),
+    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\dice\dice4.png")),
             new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die5.png")),
+    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\dice\dice5.png")),
             new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die6.png")) };
+    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\dice\dice6.png")) };
 
         private void fontsProjects()
         {
@@ -122,22 +122,22 @@ namespace Движение
             Controls.Add(titleLabel);
 
             //Кубы
-            var die1 = new PictureBox
+            var dice1 = new PictureBox
             {
                 Size = new Size(135, 135),
                 Location = new Point(ButtonWidth, Height - 5 * ButtonHeight),
                 Image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die6.png")),
+    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\dice\dice6.png")),
             };
-            Controls.Add(die1);
-            var die2 = new PictureBox
+            Controls.Add(dice1);
+            var dice2 = new PictureBox
             {
                 Size = new Size(135, 135),
-                Location = new Point(die1.Location.X, die1.Location.Y + die1.Size.Height),
+                Location = new Point(dice1.Location.X, dice1.Location.Y + dice1.Size.Height),
                 Image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\die\die6.png")),
+    .Parent.Parent.Parent.FullName.ToString(), @"Sprites\dice\dice6.png")),
             };
-            Controls.Add(die2);
+            Controls.Add(dice2);
 
             //Миникарта
             var miniMap = new PictureBox
@@ -153,7 +153,7 @@ namespace Движение
             var battleLog = new TextBox
             {
                 Size = new Size(3 * ButtonWidth / 2, ButtonHeight * 4),
-                Location = new Point(die1.Location.X + die1.Width, die1.Location.Y + ButtonHeight),
+                Location = new Point(dice1.Location.X + dice1.Width, dice1.Location.Y + ButtonHeight),
                 Font = new Font(fonts.Families[0], 15),
                 ScrollBars = ScrollBars.Vertical,
                 ReadOnly = true,
@@ -165,7 +165,7 @@ namespace Движение
             var logLabel = new Label
             {
                 Size = new Size(3 * ButtonWidth / 2, ButtonHeight),
-                Location = new Point(die1.Location.X + die1.Width, die1.Location.Y),
+                Location = new Point(dice1.Location.X + dice1.Width, dice1.Location.Y),
                 Font = new Font(fonts.Families[2], 30), //Здесь курят
                 Text = "Лог боя"
             };
@@ -179,9 +179,9 @@ namespace Движение
             //Блок для анимации героя
             var picHero = new PictureBox
             {
-                Size = die1.Size,
-                Location = new Point(die1.Location.X,
-                die1.Location.Y - ButtonHeight - die1.Size.Height),
+                Size = dice1.Size,
+                Location = new Point(dice1.Location.X,
+                dice1.Location.Y - ButtonHeight - dice1.Size.Height),
                 Image = hero.SpriteForBattle,
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 BackColor = Color.Transparent,
@@ -191,16 +191,16 @@ namespace Движение
             //Блок для анимации монстра
             var picMon = new PictureBox
             {
-                Size = die1.Size,
-                Location = new Point(die1.Location.X + +die1.Size.Width + 2 * ButtonWidth,
-                die1.Location.Y - ButtonHeight - die1.Size.Height),
+                Size = dice1.Size,
+                Location = new Point(dice1.Location.X + +dice1.Size.Width + 2 * ButtonWidth,
+                dice1.Location.Y - ButtonHeight - dice1.Size.Height),
                 Image = character2.SpriteForBattle,
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 BackColor = Color.Transparent,
             };
             Controls.Add(picMon);
-            InitData(ButtonWidth, ButtonHeight, this, fonts, dies,
-                map, hero, character2, battleLog, die1, die2);
+            InitData(ButtonWidth, ButtonHeight, this, fonts, dices,
+                map, hero, character2, battleLog, dice1, dice2);
             var buttonSword = CreateButtonSword();
             var buttonBow = CreateButtonBow(buttonSword);
             var buttonItem = CreateButtonItem(buttonBow);

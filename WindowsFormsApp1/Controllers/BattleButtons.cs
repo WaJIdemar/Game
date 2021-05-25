@@ -13,7 +13,7 @@ namespace Движение.Controllers
 {
     public static class BattleButtons
     {
-        static Image[] Dies;
+        static Image[] Dices;
         static PrivateFontCollection Fonts;
         static int ButtonWidth;
         static int ButtonHeight;
@@ -22,15 +22,15 @@ namespace Движение.Controllers
         static ICharacter hero;
         static ICharacter monster;
         static TextBox BattleLog;
-        static PictureBox Die1;
-        static PictureBox Die2;
+        static PictureBox Dice1;
+        static PictureBox Dice2;
 
         public static void InitData(int buttonWidth, int buttonHeight, Form battleScreen,
-            PrivateFontCollection fonts, Image[] dies, MapScreen map,
+            PrivateFontCollection fonts, Image[] dices, MapScreen map,
             ICharacter character1, ICharacter character2,
-            TextBox battleLog, PictureBox die1, PictureBox die2)
+            TextBox battleLog, PictureBox dice1, PictureBox dice2)
         {
-            Dies = dies;
+            Dices = dices;
             Fonts = fonts;
             ButtonWidth = buttonWidth;
             ButtonHeight = buttonHeight;
@@ -39,8 +39,8 @@ namespace Движение.Controllers
             hero = character1;
             monster = character2;
             BattleLog = battleLog;
-            Die1 = die1;
-            Die2 = die2;
+            Dice1 = dice1;
+            Dice2 = dice2;
         }
 
         public static void EndBattle(string message, bool isWin)
@@ -81,14 +81,14 @@ namespace Движение.Controllers
             BattleScreen.Controls.Add(endButton);
         }
 
-        public static int RollCheckSender(PictureBox Die1, PictureBox Die2)
+        public static int RollCheckSender()
         {
-            var die = new Die();
-            var dieValue1 = die.Roll();
-            var dieValue2 = die.Roll();
-            Die1.Image = Dies[dieValue1];
-            Die2.Image = Dies[dieValue2];
-            return dieValue1 + dieValue2 + 2;
+            var dice = new Dice();
+            var diceValue1 = dice.Roll();
+            var diceValue2 = dice.Roll();
+            Dice1.Image = Dices[diceValue1];
+            Dice2.Image = Dices[diceValue2];
+            return diceValue1 + diceValue2 + 2;
         }
 
         public static Button CreateButtonSword()
@@ -102,7 +102,7 @@ namespace Движение.Controllers
             };
             buttonSword.Click += (sender, args) =>
             {
-                var result = RollCheckSender(Die1, Die2);
+                var result = RollCheckSender();
                 if (result > 6)
                 {
                     monster.Health--;
@@ -141,7 +141,7 @@ namespace Движение.Controllers
             };
             buttonBow.Click += (sender, args) =>
             {
-                var result = RollCheckSender(Die1, Die2);
+                var result = RollCheckSender();
                 if (result > 9)
                 {
                     monster.Health--;
@@ -185,7 +185,7 @@ namespace Движение.Controllers
             };
             buttonBless.Click += (sender, args) =>
             {
-                var result = RollCheckSender(Die1, Die2);
+                var result = RollCheckSender();
             };
             return buttonBless;
         }
@@ -202,7 +202,7 @@ namespace Движение.Controllers
             };
             buttonEscape.Click += (sender, args) =>
             {
-                var result = RollCheckSender(Die1, Die2);
+                var result = RollCheckSender();
                 if (result > 6)
                 {
                     if (result < 10)

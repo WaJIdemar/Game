@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Движение.Entites
 {
-    public class Die
+    public class Dice
     {
         private int num_sides;
         private Random rnd;
-        public Die(int num_sides = 6)
+        public Dice(int num_sides = 6)
         {
             this.num_sides = num_sides;
             rnd = new Random();
