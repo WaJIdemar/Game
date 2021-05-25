@@ -36,11 +36,14 @@ namespace Движение.Entites
 
         public string pathSpriteSheetLeft;
         public string pathSpriteSheetRigth;
+        public string pathSpriteSheetUp;
+        public string pathSpriteSheetDown;
+        public string pathSpriteSheetStand;
 
         public int Size { get; set; }
 
         public Hero(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
-            string spriteSheetLeft, string spriteSheetRigth, int size)
+            int size)
         {
             this.posX = posX;
             this.posY = posY;
@@ -48,8 +51,6 @@ namespace Движение.Entites
             this.idleFrames = idleFrames;
             this.attackFrames = attackFrames;
             this.deathFrames = deathFrames;
-            this.pathSpriteSheetLeft = spriteSheetLeft;
-            this.pathSpriteSheetRigth = spriteSheetRigth;
             delta = new Point(0, 0);
             this.Size = size;
             currentAnimation = 0;
@@ -60,6 +61,16 @@ namespace Движение.Entites
             isInBattle = false;
             Health = 25;
             isAlive = true;
+            this.pathSpriteSheetRigth = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Move Right\");
+            this.pathSpriteSheetLeft = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Move Left\");
+            this.pathSpriteSheetUp = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Move Up\");
+            this.pathSpriteSheetDown = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Move Down\");
+            this.pathSpriteSheetStand = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Stand\");
         }
 
         public void Move()
@@ -102,6 +113,7 @@ namespace Движение.Entites
             dirX = 0;
             counter = 0;
             isMoving = false;
+            SetAnimationConfiguration(0);
         }
 
         public void SetAnimationConfiguration(int currentAnimation)
@@ -127,26 +139,44 @@ namespace Движение.Entites
         public void PlayAnimation(Graphics g, int posX, int posY, int size)
         {
             var pathToSprite = new StringBuilder();
-            var state = new StringBuilder();
             if (currentFrame < currentLimit - 1)
                 currentFrame++;
             else currentFrame = 0;
-            if (currentAnimation == 0)
-                state.Append(@"Stand\");
-            else if (currentAnimation == 1)
-                state.Append(@"Run\");
-            if ((currentAnimation == 0 || currentAnimation == 1) && (dirX > 0
-                || lastDirX > 0))
+            if (dirX > 0)
             {
-                pathToSprite.Append(pathSpriteSheetRigth + state + currentFrame.ToString() + ".png");
+                pathToSprite.Append(pathSpriteSheetRigth + currentFrame.ToString() + ".png");
                 var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                 pathToSprite.ToString()));
                 nowSprite = image;
                 g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
             }
-            else
+            else if (dirX < 0)
             {
-                pathToSprite.Append(pathSpriteSheetLeft + state + currentFrame.ToString() + ".png");
+                pathToSprite.Append(pathSpriteSheetLeft + currentFrame.ToString() + ".png");
+                var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
+                pathToSprite.ToString()));
+                nowSprite = image;
+                g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
+            }
+            else if (dirY > 0)
+            {
+                pathToSprite.Append(pathSpriteSheetDown + currentFrame.ToString() + ".png");
+                var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
+                pathToSprite.ToString()));
+                nowSprite = image;
+                g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
+            }
+            else if (dirY < 0)
+            {
+                pathToSprite.Append(pathSpriteSheetUp + currentFrame.ToString() + ".png");
+                var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
+                pathToSprite.ToString()));
+                nowSprite = image;
+                g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
+            }
+            else if (dirX == dirY && dirX == 0)
+            {
+                pathToSprite.Append(pathSpriteSheetStand+ currentFrame.ToString() + ".png");
                 var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                 pathToSprite.ToString()));
                 nowSprite = image;

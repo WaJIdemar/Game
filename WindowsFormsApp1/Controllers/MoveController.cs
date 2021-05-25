@@ -50,6 +50,7 @@ namespace Движение.Controllers
                         player.dirX = dir;
                         player.lastDirX = 1;
                         player.isMoving = true;
+                        player.lastDirY = 0;
                         player.SetAnimationConfiguration(1);
                         break;
                     case Keys.Escape:

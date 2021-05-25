@@ -11,9 +11,9 @@ namespace Движение.Controllers
 {
     public static class MapController
     {
-        public const int mapHeight = 21;
+        public const int mapHeight = 23;
         public static HashSet<char> stop = new HashSet<char>(new char[] { 'w', 'W' });
-        public const int mapWidth = 21;
+        public const int mapWidth = 23;
         public static int cellSize;
         public static char[,] map = new char[mapHeight, mapWidth];
         public static Image spriteSheet;
@@ -24,6 +24,8 @@ namespace Движение.Controllers
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Background.jpg"));
         public static Image pictureMap;
         public static Hero Hero;
+        public static Image spriteGround;
+        public static Image spriteWall;
         public static ICharacter[,] characters;
 
         public static void Init(Hero hero)
@@ -35,9 +37,12 @@ namespace Движение.Controllers
             spriteSheet =
                new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Forest.png"));
-            spriteChest =
-                new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Chest.png"));
+            spriteGround = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Object in Map\0.png"));
+            spriteWall = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Object in Map\w.png"));
+            spriteChest = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Object in Map\C.png"));
             CreateEntity();
             CreateMap();
         }
@@ -54,27 +59,29 @@ namespace Движение.Controllers
         {
             var t = new char[,]
             {
-                { '0', '0', '0', 'w', 'w', 'w', 'w', 'C', 'w', '0', '0', '0', 'w', 'w', 'C', 'w', '0', 'C', '0', 'w', '0'},
-                { '0', '0', '0', '0', 'w', 'w', 'w', '0', 'M', '0', 'w', '0', 'w', 'w', '0', 'M', '0', 'w', '0', 'w', '0'},
-                { '0', '0', '0', '0', '0', 'w', 'w', '0', 'w', '0', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0', '0', '0'},
-                { 'w', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', '0', '0', '0', '0', '0', '0', '0', '0', 'w', 'w'},
-                { 'w', 'w', '0', '0', '0', '0', '0', '0', '0', 'M', '0', '0', 'w', '0', 'w', 'w', 'w', 'w', '0', '0', '0'},
-                { 'w', 'w', 'w', '0', '0', 'w', 'w', '0', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', '0', '0', 'w', '0'},
-                { 'w', 'w', 'w', 'w', '0', 'w', 'C', '0', 'w', 'w', 'w', '0', 'w', 'M', 'w', '0', 'w', 'w', 'w', 'w', 'M'},
-                { 'C', 'w', 'w', '0', '0', '0', '0', 'M', '0', '0', '0', 'M', 'w', '0', 'w', '0', '0', '0', '0', 'w', '0'},
-                { '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'C', 'w', 'w', 'w', 'w', 'w', 'w', '0'},
-                { 'M', 'w', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', '0', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0'},
-                { '0', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', '0', '0', 'M', 'M', 'M', 'M', 'M', '0', '0', '0', '0'},
-                { '0', 'w', 'w', 'w', '0', '0', 'w', '0', 'w', '0', '0', '0', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0'},
-                { '0', '0', 'w', 'w', '0', '0', 'w', '0', 'w', 'w', 'M', 'w', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0'},
-                { 'w', '0', '0', 'w', 'w', 'M', 'w', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
-                { 'w', 'w', '0', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', '0', 'w', 'w', 'M', 'w', 'w', 'w', 'w'},
-                { 'w', '0', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', '0', '0', '0', '0', '0', 'w'},
-                { 'w', 'M', '0', '0', '0', '0', 'w', '0', '0', '0', 'M', '0', 'w', 'w', '0', 'w', 'w', 'w', 'w', '0', 'w'},
-                { 'w', '0', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', 'w', '0', '0', 'w', '0', 'w', '0', 'M', '0', '0', 'w'},
-                { 'w', '0', '0', 'C', 'w', '0', 'w', '0', '0', '0', 'w', 'w', '0', 'w', '0', 'w', '0', 'w', 'w', '0', '0'},
-                { 'w', 'w', 'C', '0', 'w', '0', 'w', '0', 'w', 'C', '0', 'w', '0', 'w', '0', 'M', '0', '0', 'w', 'w', '0'},
-                { 'w', 'w', 'w', '0', '0', 'M', '0', '0', 'w', 'w', '0', '0', 'M', 'w', 'w', 'C', 'w', '0', '0', '0', 'M'},
+                { 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'},
+                { 'w', '0', '0', '0', 'w', 'w', 'w', 'w', 'C', 'w', '0', '0', '0', 'w', 'w', 'C', 'w', '0', 'C', '0', 'w', '0', 'w'},
+                { 'w', '0', '0', '0', '0', 'w', 'w', 'w', '0', 'M', '0', 'w', '0', 'w', 'w', '0', 'M', '0', 'w', '0', 'w', '0', 'w'},
+                { 'w', '0', '0', '0', '0', '0', 'w', 'w', '0', 'w', '0', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0', '0', '0', 'w'},
+                { 'w', 'w', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', '0', '0', '0', '0', '0', '0', '0', '0', 'w', 'w', 'w'},
+                { 'w', 'w', 'w', '0', '0', '0', '0', '0', '0', '0', 'M', '0', '0', 'w', '0', 'w', 'w', 'w', 'w', '0', '0', '0', 'w'},
+                { 'w', 'w', 'w', 'w', '0', '0', 'w', 'w', '0', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
+                { 'w', 'w', 'w', 'w', 'w', '0', 'w', 'C', '0', 'w', 'w', 'w', '0', 'w', 'M', 'w', '0', 'w', 'w', 'w', 'w', 'M', 'w'},
+                { 'w', 'C', 'w', 'w', '0', '0', '0', '0', 'M', '0', '0', '0', 'M', 'w', '0', 'w', '0', '0', '0', '0', 'w', '0', 'w'},//7
+                { 'w', '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'C', 'w', 'w', 'w', 'w', 'w', 'w', '0', 'w'},
+                { 'w', 'M', 'w', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', '0', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
+                { 'w', '0', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', '0', '0', 'M', 'M', 'M', 'M', 'M', '0', '0', '0', '0', 'w'},//10
+                { 'w', '0', 'w', 'w', 'w', '0', '0', 'w', '0', 'w', '0', '0', '0', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
+                { 'w', '0', '0', 'w', 'w', '0', '0', 'w', '0', 'w', 'w', '0', 'w', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0', 'w'},//12
+                { 'w', 'w', '0', '0', 'w', 'w', 'M', 'w', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', 'w'},//13
+                { 'w', 'w', 'w', '0', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', '0', 'w', 'w', 'M', 'w', 'w', 'w', 'w', 'w'},
+                { 'w', 'w', '0', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', '0', '0', '0', '0', '0', 'w', 'w'},
+                { 'w', 'w', 'M', '0', '0', '0', '0', 'w', '0', '0', '0', 'M', '0', 'w', 'w', '0', 'w', 'w', 'w', 'w', '0', 'w', 'w'},
+                { 'w', 'w', '0', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', 'w', '0', '0', 'w', '0', 'w', '0', 'M', '0', '0', 'w', 'w'},
+                { 'w', 'w', '0', '0', 'C', 'w', '0', 'w', '0', '0', '0', 'w', 'w', '0', 'w', '0', 'w', '0', 'w', 'w', '0', '0', 'w'},
+                { 'w', 'w', 'w', 'C', '0', 'w', '0', 'w', '0', 'w', 'C', '0', 'w', '0', 'w', '0', 'M', '0', '0', 'w', 'w', '0', 'w'},
+                { 'w', 'w', 'w', 'w', '0', '0', 'M', '0', '0', 'w', 'w', '0', '0', 'M', 'w', 'w', 'C', 'w', '0', '0', '0', 'M', 'w'},
+                { 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'}
             };
             return t;
         }
@@ -89,7 +96,7 @@ namespace Движение.Controllers
                 {
 
                     case 'w':
-                        g.DrawImage(spriteSheet, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)), 96, 0, 20, 20, GraphicsUnit.Pixel);
+                        g.DrawImage(spriteWall, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
                         break;
 
                     case 'K':
@@ -107,15 +114,15 @@ namespace Движение.Controllers
                     case 'M':
                         drawMonster.Value.posX = point.X * cellSize - player.delta.X;
                         drawMonster.Value.posY = point.Y * cellSize - player.delta.Y;
-                        g.DrawImage(spriteSheet, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
+                        g.DrawImage(spriteGround, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
                         drawMonster.Value.PlayAnimation(g, drawMonster.Value.posX, drawMonster.Value.posY, drawMonster.Value.Size);
                         characters[point.Y, point.X] = drawMonster.Value;
                         drawMonster = drawMonster.Next;
                         break;
 
                     case 'C':
-                        g.DrawImage(spriteSheet, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
-                        g.DrawImage(spriteChest, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)), 0, 0, 200, 129, GraphicsUnit.Pixel);
+                        g.DrawImage(spriteGround, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
+                        g.DrawImage(spriteChest, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
                         break;
 
                     case 'm':
@@ -127,7 +134,7 @@ namespace Движение.Controllers
                         break;
 
                     case '0':
-                        g.DrawImage(spriteSheet, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
+                        g.DrawImage(spriteGround, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
                         break;
                 }
             }
@@ -217,8 +224,8 @@ namespace Движение.Controllers
             {
                 var point = queue.Dequeue();
                 if (point.X >= mapWidth || point.Y >= mapWidth || point.X < 0 || point.Y < 0
-                    || point.X >= start.X + visibility || point.Y >= start.Y + visibility
-                    || point.X <= start.X - visibility || point.Y <= start.Y - visibility
+                    || point.X > start.X + visibility || point.Y > start.Y + visibility
+                    || point.X < start.X - visibility || point.Y < start.Y - visibility
                     || visited.Contains(point) || invisiblePoints.Contains(point))
                     continue;
                 visited.Add(point);
@@ -287,7 +294,8 @@ namespace Движение.Controllers
                 {
                     y = yOld;
                     for (; y <= wall.Y; y++)
-                        hashSet.Add(new Point(x, y));
+                        if (map[y, x] != 'w')
+                            hashSet.Add(new Point(x, y));
                 }
             }
             else if (wall.X == start.X && wall.Y < start.Y)
@@ -296,7 +304,8 @@ namespace Движение.Controllers
                 if (start.Y - visibility >= 0)
                     y = start.Y - visibility;
                 for (; y <= wall.Y; y++)
-                    hashSet.Add(new Point(x, y));
+                    if (map[y, x] != 'w')
+                        hashSet.Add(new Point(x, y));
             }
             else if (wall.X > start.X && wall.Y < start.Y)
             {
@@ -310,7 +319,8 @@ namespace Движение.Controllers
                 {
                     y = yOld;
                     for (; y <= wall.Y; y++)
-                        hashSet.Add(new Point(x, y));
+                        if (map[y, x] != 'w')
+                            hashSet.Add(new Point(x, y));
                 }
             }
             else if (wall.Y == start.Y && wall.X < start.X)
@@ -319,25 +329,28 @@ namespace Движение.Controllers
                     x = start.X - visibility;
                 y = wall.Y;
                 for (; x <= wall.X; x++)
-                    hashSet.Add(new Point(x, y));
+                    if (map[y, x] != 'w')
+                        hashSet.Add(new Point(x, y));
             }
             else if (wall.Y == start.Y && wall.X > start.X)
             {
                 x = wall.X;
                 y = wall.Y;
                 for (; x <= (start.X + visibility) && (x < mapWidth); x++)
-                    hashSet.Add(new Point(x, y));
+                    if (map[y, x] != 'w')
+                        hashSet.Add(new Point(x, y));
             }
             else if (wall.X < start.X && wall.Y > start.Y)
             {
-                if (start.X - visibility >= 0)
+                if (start.X - visibility > 0)
                     x = start.X - visibility;
                 yOld = wall.Y;
                 for (; x <= wall.X; x++)
                 {
                     y = yOld;
-                    for (; (y < start.Y + visibility) && (y < mapHeight); y++)
-                        hashSet.Add(new Point(x, y));
+                    for (; (y <= start.Y + visibility) && (y < mapHeight); y++)
+                        if (map[y, x] != 'w')
+                            hashSet.Add(new Point(x, y));
                 }
             }
             else if (wall.X == start.X && wall.Y > start.Y)
@@ -345,7 +358,8 @@ namespace Движение.Controllers
                 x = wall.X;
                 y = wall.Y;
                 for (; (y <= start.Y + visibility) && (y < mapHeight); y++)
-                    hashSet.Add(new Point(x, y));
+                    if (map[y, x] != 'w')
+                        hashSet.Add(new Point(x, y));
             }
             else
             {
@@ -355,7 +369,8 @@ namespace Движение.Controllers
                 {
                     y = yOld;
                     for (; (y <= start.Y + visibility) && (y < mapHeight); y++)
-                        hashSet.Add(new Point(x, y));
+                        if (map[y, x] != 'w')
+                            hashSet.Add(new Point(x, y));
                 }
             }
             hashSet.Remove(wall);
@@ -364,7 +379,7 @@ namespace Движение.Controllers
 
         public static void BackStep()
         {
-            if (Hero.delta.Y != 0)
+            if (Hero.lastDirY != 0)
             {
                 Hero.LocationMap.Y = Hero.LocationMap.Y - Hero.lastDirY;
                 Hero.delta.Y = Hero.delta.Y - cellSize * Hero.lastDirY;

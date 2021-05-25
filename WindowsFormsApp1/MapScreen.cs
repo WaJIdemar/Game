@@ -17,8 +17,6 @@ namespace WindowsFormsApp1
 {
     public partial class MapScreen : Form
     {
-        public string gladiatorSheetRight;
-        public string gladiatorSheetLeft;
         public Hero player;
         public Point delta;
         public ProgressBar health;
@@ -34,8 +32,7 @@ namespace WindowsFormsApp1
                 Size = new Size(200, 30)
             };
             Controls.Add(health);
-            timer1.Interval = 1;
-            timer2.Interval = 200;
+            timer1.Interval = 60;
             timer1.Tick += new EventHandler(Update);
 
             KeyUp += new KeyEventHandler(MoveController.OnKeyUp);
@@ -48,13 +45,10 @@ namespace WindowsFormsApp1
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
 
-            gladiatorSheetRight = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Right\");
-            gladiatorSheetLeft = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Left\");
-            player = new Hero(10 * sqSize, 10 * sqSize,
+            
+            player = new Hero(MapController.mapWidth / 2 * sqSize, MapController.mapHeight / 2 * sqSize,
                 HeroModels.idleFrames, HeroModels.runFrames, HeroModels.attackFrames,
-                HeroModels.deathFrames, gladiatorSheetLeft, gladiatorSheetRight, sqSize);
+                HeroModels.deathFrames, sqSize);
             MapController.Init(player);
             Width = MapController.GetWidth();
             Height = MapController.GetHeight();
@@ -80,13 +74,11 @@ namespace WindowsFormsApp1
             }
             if (player.isMoving && PhysicsController.IsCollide(player, MapController.stop))
             {
-                timer1.Interval = 33;
                 player.Move();
                 health.Value = player.Health;
             }
             else
             {
-                timer1.Interval = 500;
                 player.SetAnimationConfiguration(0);
                 health.Value = player.Health;
             }
