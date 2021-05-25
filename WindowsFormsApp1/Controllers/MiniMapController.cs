@@ -65,7 +65,7 @@ namespace Движение.Controllers
                         switch (map[j, i])
                         {
                             case 'p':
-                                var pathToSprite = hero.pathSpriteSheetRigth + @"Stand\0.png";
+                                var pathToSprite = hero.pathSpriteSheetRigth + @"0.png";
                                 var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                                     pathToSprite));
                                 g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);

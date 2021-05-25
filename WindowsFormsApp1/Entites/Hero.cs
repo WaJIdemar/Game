@@ -7,8 +7,6 @@ namespace Движение.Entites
 {
     public class Hero : ICharacter
     {
-        public int posX;
-        public int posY;
         public bool isAlive { get; private set; }
         public int Health { get; set; }
         public Point LocationMap;
@@ -22,7 +20,8 @@ namespace Движение.Entites
         public int visibility = 3;
         public ICharacter whoInBattle = null;
         public bool isInBattle;
-        public Image nowSprite { get; set; }
+        public Image SpriteForBattle { get; set; }
+        public Image SpriteFace { get; set; }
         public bool pressButtonMove;
 
         public int currentAnimation;
@@ -41,6 +40,8 @@ namespace Движение.Entites
         public string pathSpriteSheetStand;
 
         public int Size { get; set; }
+        public int posX { get; set ; }
+        public int posY { get; set ; }
 
         public Hero(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
             int size)
@@ -52,7 +53,7 @@ namespace Движение.Entites
             this.attackFrames = attackFrames;
             this.deathFrames = deathFrames;
             delta = new Point(0, 0);
-            this.Size = size;
+            Size = size;
             currentAnimation = 0;
             currentFrame = 0;
             currentLimit = idleFrames;
@@ -61,16 +62,20 @@ namespace Движение.Entites
             isInBattle = false;
             Health = 25;
             isAlive = true;
-            this.pathSpriteSheetRigth = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+            pathSpriteSheetRigth = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Move Right\");
-            this.pathSpriteSheetLeft = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+            pathSpriteSheetLeft = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Move Left\");
-            this.pathSpriteSheetUp = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+            pathSpriteSheetUp = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Move Up\");
-            this.pathSpriteSheetDown = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+            pathSpriteSheetDown = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Move Down\");
-            this.pathSpriteSheetStand = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+            pathSpriteSheetStand = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Stand\");
+            SpriteFace = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Face.png"));
+            SpriteForBattle = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Stand\0.png"));
         }
 
         public void Move()
@@ -92,7 +97,8 @@ namespace Движение.Entites
                 {
                     MapController.map[LocationMap.Y, LocationMap.X] = '0';
                 }
-                else if (MapController.map[LocationMap.Y, LocationMap.X] == 'M')
+                else if (MapController.map[LocationMap.Y, LocationMap.X] == 'M' ||
+                    MapController.map[LocationMap.Y, LocationMap.X] == 'm')
                 {
                     whoInBattle = MapController.characters[LocationMap.Y, LocationMap.X];
                     if (Health > 0)
@@ -147,7 +153,7 @@ namespace Движение.Entites
                 pathToSprite.Append(pathSpriteSheetRigth + currentFrame.ToString() + ".png");
                 var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                 pathToSprite.ToString()));
-                nowSprite = image;
+                SpriteForBattle = image;
                 g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
             }
             else if (dirX < 0)
@@ -155,7 +161,7 @@ namespace Движение.Entites
                 pathToSprite.Append(pathSpriteSheetLeft + currentFrame.ToString() + ".png");
                 var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                 pathToSprite.ToString()));
-                nowSprite = image;
+                SpriteForBattle = image;
                 g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
             }
             else if (dirY > 0)
@@ -163,7 +169,7 @@ namespace Движение.Entites
                 pathToSprite.Append(pathSpriteSheetDown + currentFrame.ToString() + ".png");
                 var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                 pathToSprite.ToString()));
-                nowSprite = image;
+                SpriteForBattle = image;
                 g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
             }
             else if (dirY < 0)
@@ -171,7 +177,7 @@ namespace Движение.Entites
                 pathToSprite.Append(pathSpriteSheetUp + currentFrame.ToString() + ".png");
                 var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                 pathToSprite.ToString()));
-                nowSprite = image;
+                SpriteForBattle = image;
                 g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
             }
             else if (dirX == dirY && dirX == 0)
@@ -179,7 +185,7 @@ namespace Движение.Entites
                 pathToSprite.Append(pathSpriteSheetStand+ currentFrame.ToString() + ".png");
                 var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                 pathToSprite.ToString()));
-                nowSprite = image;
+                SpriteForBattle = image;
                 g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));
             }
         }

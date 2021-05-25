@@ -13,7 +13,10 @@ namespace Движение.Entites
 
         int Health { get; set; }
         int Size { get; set; }
-        Image nowSprite { get; set; }
+        int posX { get; set; }
+        int posY { get; set; }
+        Image SpriteForBattle { get; set; }
+        Image SpriteFace { get; set; }
 
         void PlayAnimation(Graphics g, int posX, int posY, int size);
 

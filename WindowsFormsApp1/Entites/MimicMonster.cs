@@ -6,14 +6,16 @@ using System.Text;
 
 namespace Движение.Entites
 {
-    public class OrangeMonster : ICharacter
+    class MimicMonster : ICharacter
     {
         public int posX { get; set; }
         public int posY { get; set; }
-        public int Health { get; set; }
-        public Image SpriteForBattle { get; set; }
-        public Image SpriteFace { get; set; }
         public Point LocationMap;
+        public string pathToSprites;
+        public int Health { get ; set ; }
+        public int Size { get ; set ; }
+        public Image SpriteForBattle { get ; set ; }
+        public Image SpriteFace { get ; set ; }
 
         public int currentAnimation;
         public int currentFrame;
@@ -24,11 +26,7 @@ namespace Движение.Entites
         public int attackFrames;
         public int deathFrames;
 
-        public string pathToSprites;
-
-        public int Size { get; set; }
-
-        public OrangeMonster(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
+        public MimicMonster(int posX, int posY, int idleFrames, int runFrames, int attackFrames, int deathFrames,
             string pathToSprites, Point locationMap, int size)
         {
             this.posX = posX;
@@ -44,10 +42,10 @@ namespace Движение.Entites
             currentLimit = idleFrames;
             LocationMap = locationMap;
             SpriteFace = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Orange\Face.png"));
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Mimic\Face.png"));
             SpriteForBattle = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Orange\BattleModel.png"));
-            Health = 5;
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Mimic\BattleModel.png"));
+            Health = 10;
         }
 
         public void Move()
@@ -61,7 +59,7 @@ namespace Движение.Entites
                 currentFrame++;
             else currentFrame = 0;
 
-            var currentPathToSprite= new StringBuilder(pathToSprites);
+            var currentPathToSprite = new StringBuilder(pathToSprites);
             currentPathToSprite.Append(currentFrame.ToString() + ".png");
             var spriteOrangeMonster =
                 new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),

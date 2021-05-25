@@ -18,8 +18,8 @@ namespace Движение.Controllers
         public static char[,] map = new char[mapHeight, mapWidth];
         public static Image spriteSheet;
         public static Image spriteChest;
-        public static LinkedList<OrangeMonster> monsters;
-        public static LinkedListNode<OrangeMonster> drawMonster;
+        public static LinkedList<ICharacter> monsters;
+        public static LinkedListNode<ICharacter> drawMonster;
         public static Image background = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Background.jpg"));
         public static Image pictureMap;
@@ -67,13 +67,13 @@ namespace Движение.Controllers
                 { 'w', 'w', 'w', '0', '0', '0', '0', '0', '0', '0', 'M', '0', '0', 'w', '0', 'w', 'w', 'w', 'w', '0', '0', '0', 'w'},
                 { 'w', 'w', 'w', 'w', '0', '0', 'w', 'w', '0', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
                 { 'w', 'w', 'w', 'w', 'w', '0', 'w', 'C', '0', 'w', 'w', 'w', '0', 'w', 'M', 'w', '0', 'w', 'w', 'w', 'w', 'M', 'w'},
-                { 'w', 'C', 'w', 'w', '0', '0', '0', '0', 'M', '0', '0', '0', 'M', 'w', '0', 'w', '0', '0', '0', '0', 'w', '0', 'w'},//7
+                { 'w', 'C', 'w', 'w', '0', '0', '0', '0', 'M', '0', '0', '0', 'M', 'w', '0', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
                 { 'w', '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'C', 'w', 'w', 'w', 'w', 'w', 'w', '0', 'w'},
-                { 'w', 'M', 'w', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', '0', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
-                { 'w', '0', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', '0', '0', 'M', 'M', 'M', 'M', 'M', '0', '0', '0', '0', 'w'},//10
+                { 'w', 'M', 'w', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', 'm', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
+                { 'w', '0', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', '0', '0', '0', 'M', '0', '0', '0', '0', '0', '0', '0', 'w'},
                 { 'w', '0', 'w', 'w', 'w', '0', '0', 'w', '0', 'w', '0', '0', '0', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
-                { 'w', '0', '0', 'w', 'w', '0', '0', 'w', '0', 'w', 'w', '0', 'w', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0', 'w'},//12
-                { 'w', 'w', '0', '0', 'w', 'w', 'M', 'w', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', 'w'},//13
+                { 'w', '0', '0', 'w', 'w', '0', '0', 'w', '0', 'w', 'w', '0', 'w', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0', 'w'},
+                { 'w', 'w', '0', '0', 'w', 'w', 'M', 'w', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', 'w'},
                 { 'w', 'w', 'w', '0', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', '0', 'w', 'w', 'M', 'w', 'w', 'w', 'w', 'w'},
                 { 'w', 'w', '0', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', '0', '0', '0', '0', '0', 'w', 'w'},
                 { 'w', 'w', 'M', '0', '0', '0', '0', 'w', '0', '0', '0', 'M', '0', 'w', 'w', '0', 'w', 'w', 'w', 'w', '0', 'w', 'w'},
@@ -126,7 +126,12 @@ namespace Движение.Controllers
                         break;
 
                     case 'm':
-                        g.DrawImage(spriteSheet, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)), 170, 30, 20, 20, GraphicsUnit.Pixel);
+                        drawMonster.Value.posX = point.X * cellSize - player.delta.X;
+                        drawMonster.Value.posY = point.Y * cellSize - player.delta.Y;
+                        g.DrawImage(spriteGround, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
+                        drawMonster.Value.PlayAnimation(g, drawMonster.Value.posX, drawMonster.Value.posY, drawMonster.Value.Size);
+                        characters[point.Y, point.X] = drawMonster.Value;
+                        drawMonster = drawMonster.Next;
                         break;
 
                     case 'T':
@@ -168,7 +173,7 @@ namespace Движение.Controllers
                             break;
 
                         case 'm':
-                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 170, 30, 20, 20, GraphicsUnit.Pixel);
+                            g.DrawImage(spriteSheet, new Rectangle(new Point(j * cellSize, i * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
                             break;
 
                         case 'T':
@@ -197,7 +202,7 @@ namespace Движение.Controllers
 
         private static void CreateEntity()
         {
-            monsters = new LinkedList<OrangeMonster>();
+            monsters = new LinkedList<ICharacter>();
             for (int i = 0; i < mapWidth; i++)
             {
                 for (int j = 0; j < mapHeight; j++)
@@ -206,6 +211,10 @@ namespace Движение.Controllers
                         monsters.AddLast(new OrangeMonster(j * cellSize, i * cellSize, MonsterModels.idleFrames, MonsterModels.runFrames, MonsterModels.deathFrames,
                MonsterModels.deathFrames, Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Orange\Stand\"), new Point(i, j), Hero.Size));
+                    else if (map[i, j] == 'm')
+                        monsters.AddLast(new MimicMonster(j * cellSize, i * cellSize, MonsterModels.idleFrames, MonsterModels.runFrames, MonsterModels.deathFrames,
+               MonsterModels.deathFrames, Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+               .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Mimic\Stand\"), new Point(i, j), Hero.Size));
                 }
             }
         }
@@ -245,34 +254,6 @@ namespace Движение.Controllers
                         }
             }
         }
-
-        //private static Tuple<Tuple<int, int>, Tuple<int, int>> GetInvisiblePoints(Point start, Point wall)
-        //{
-        //    if (wall.X < start.X && wall.Y < start.Y)
-        //        return new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(wall.X, -1), new Tuple<int, int>(wall.Y, -1));
-        //    else if (wall.X == start.X && wall.Y < start.Y)
-        //        return new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(wall.X, 0), new Tuple<int, int>(wall.Y, -1));
-        //    else if (wall.X > start.X && wall.Y < start.Y)
-        //        return new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(wall.X, 1), new Tuple<int, int>(wall.Y, -1));
-        //    else if (wall.Y == start.Y && wall.X < start.X)
-        //        return new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(wall.X, -1), new Tuple<int, int>(wall.Y, 0));
-        //    else if (wall.Y == start.Y && wall.X > start.X)
-        //        return new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(wall.X, 1), new Tuple<int, int>(wall.Y, 0));
-        //    else if (wall.X < start.X && wall.Y > start.Y)
-        //        return new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(wall.X, -1), new Tuple<int, int>(wall.Y, 1));
-        //    else if (wall.X == start.X && wall.Y > start.Y)
-        //        return new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(wall.X, 0), new Tuple<int, int>(wall.Y, 1));
-        //    else
-        //        return new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(wall.X, 1), new Tuple<int, int>(wall.Y, 1));
-        //}
-
-        //private static bool PointVisible(Point point, List<Tuple<Tuple<int, int>, Tuple<int, int>>> walls)
-        //{
-        //    foreach (var t in walls)
-        //    {
-        //        if (t.Item1.Item1 < 0)
-        //    }
-        //}
 
         public static HashSet<Point> GetInvisiblePoints(Point start, Point wall, int visibility)
         {

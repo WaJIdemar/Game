@@ -20,6 +20,7 @@ namespace WindowsFormsApp1
         public Hero player;
         public Point delta;
         public ProgressBar health;
+        public PictureBox heroFace;
         public bool battleCheck = false;
         public int sqSize = 50;
 
@@ -28,9 +29,18 @@ namespace WindowsFormsApp1
             InitializeComponent();
             health = new ProgressBar
             {
-                Location = new Point(0, 0),
+                Location = new Point(0, 50),
                 Size = new Size(200, 30)
             };
+            heroFace = new PictureBox
+            {
+                Image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Face.png")),
+                Location = new Point(0, 0),
+                Size = new Size(50, 50),
+                SizeMode = PictureBoxSizeMode.StretchImage,
+            };
+            Controls.Add(heroFace);
             Controls.Add(health);
             timer1.Interval = 60;
             timer1.Tick += new EventHandler(Update);
@@ -45,7 +55,7 @@ namespace WindowsFormsApp1
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
 
-            
+
             player = new Hero(MapController.mapWidth / 2 * sqSize, MapController.mapHeight / 2 * sqSize,
                 HeroModels.idleFrames, HeroModels.runFrames, HeroModels.attackFrames,
                 HeroModels.deathFrames, sqSize);
