@@ -17,7 +17,7 @@ namespace Движение.Entites
         int posY { get; set; }
         Image SpriteForBattle { get; set; }
         Image SpriteFace { get; set; }
-
+        int AttackPower { get; set; }
         void PlayAnimation(Graphics g, int posX, int posY, int size);
 
         

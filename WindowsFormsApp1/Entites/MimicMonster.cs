@@ -9,6 +9,7 @@ namespace Движение.Entites
     class MimicMonster : ICharacter
     {
         public int posX { get; set; }
+        public int AttackPower { get; set; }
         public int posY { get; set; }
         public Point LocationMap;
         public string pathToSprites;
@@ -42,6 +43,7 @@ namespace Движение.Entites
             SpriteForBattle = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Mimic\BattleModel.png"));
             Health = 10;
+            AttackPower = 2;
         }
 
         public void Move()

@@ -9,6 +9,7 @@ namespace Движение.Entites
     public class OrangeMonster : ICharacter
     {
         public int posX { get; set; }
+        public int AttackPower { get; set; }
         public int posY { get; set; }
         public int Health { get; set; }
         public Image SpriteForBattle { get; set; }
@@ -42,6 +43,7 @@ namespace Движение.Entites
             SpriteForBattle = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Orange\BattleModel.png"));
             Health = 5;
+            AttackPower = 1;
         }
 
         public void Move()

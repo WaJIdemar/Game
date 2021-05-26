@@ -105,6 +105,7 @@ namespace Движение
             Controls.Add(heroFace);
             Controls.Add(monsterFace);
             fontsProjects();
+            DoubleBuffered = true;
             BackgroundImage = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
     .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Ринг.jpg"));
 

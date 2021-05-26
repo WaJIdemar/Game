@@ -13,17 +13,28 @@ namespace Движение.Controllers
 {
     public static class BattleButtons
     {
-        static Image[] Dices;
         static PrivateFontCollection Fonts;
+
         static int ButtonWidth;
         static int ButtonHeight;
+
         static Form BattleScreen;
         static MapScreen mapS;
+
         static ICharacter hero;
         static ICharacter monster;
+
         static TextBox BattleLog;
+
+        static Image[] Dices;
         static PictureBox Dice1;
         static PictureBox Dice2;
+
+        static int escapeBless;
+        static int hitBless;
+        static int heroPowerBless;
+        static int monsterPowerBless;
+        static bool blessCheck;
 
         public static void InitData(int buttonWidth, int buttonHeight, Form battleScreen,
             PrivateFontCollection fonts, Image[] dices, MapScreen map,
@@ -41,6 +52,9 @@ namespace Движение.Controllers
             BattleLog = battleLog;
             Dice1 = dice1;
             Dice2 = dice2;
+            escapeBless = 0;
+            hitBless = 0;
+            blessCheck = true;
         }
 
         public static void EndBattle(string message, bool isWin)
@@ -81,14 +95,214 @@ namespace Движение.Controllers
             BattleScreen.Controls.Add(endButton);
         }
 
-        public static int RollCheckSender()
+        public static int RollCheckSender(int mod = 0)
         {
             var dice = new Dice();
             var diceValue1 = dice.Roll();
             var diceValue2 = dice.Roll();
+            if (mod < 0)
+                if (diceValue1 >= Math.Abs(mod))
+                    diceValue1 += mod;
+                else if (diceValue2 >= Math.Abs(mod))
+                    diceValue2 += mod;
+                else if (diceValue1 + diceValue2 <= Math.Abs(mod))
+                {
+                    diceValue1 = 0;
+                    diceValue2 = 0;
+                }
+                else
+                {
+                    mod += diceValue1;
+                    diceValue1 = 0;
+                    diceValue2 += mod;
+                }
+            else if (diceValue1 + mod < 6)
+                diceValue1 += mod;
+            else if (diceValue2 + mod < 6)
+                diceValue2 += mod;
+            else if (diceValue1 + diceValue2 + mod > 10)
+            {
+                diceValue1 = 5;
+                diceValue2 = 5;
+            }
+            else
+            {
+                var k = 5 - diceValue1;
+                mod -= k;
+                diceValue1 += k;
+                diceValue2 += mod;
+            }
             Dice1.Image = Dices[diceValue1];
             Dice2.Image = Dices[diceValue2];
             return diceValue1 + diceValue2 + 2;
+        }
+
+        private static void MonsterPowerBlessCreate(Button bless)
+        {
+            bless.Click += (sender, args) =>
+            {
+                if (blessCheck)
+                {
+                    var result = RollCheckSender();
+                    if (result > 6)
+                    {
+                        if (result < 10)
+                        {
+                            monsterPowerBless--;
+                            BattleLog.AppendLine("Ваша музыка бьет по мостру. В следующий раз его атака будет чуть слабее!");
+                        }
+                        else
+                        {
+                            monsterPowerBless -= 2;
+                            BattleLog.AppendLine("Музыка стала вашим спасением! Следующая атака монстра будет значительно слабее!");
+                        }
+                    }
+                    else
+                    {
+                        monsterPowerBless++;
+                        BattleLog.AppendLine("Ваша музыка вдохновила монстра вместо того, что бы ослабить. Следующая атака по вам будет сильнее...");
+                    }
+                    blessCheck = false;
+                }
+                else
+                {
+                    BattleLog.AppendLine("Между другими действиями можно использовать благословение и предмет из инвентаря только один раз!");
+                }
+            };
+            BattleScreen.Controls.Add(bless);
+        }
+
+        private static void HitBlessCreate(Button bless)
+        {
+            bless.Click += (sender, args) =>
+            {
+                if (blessCheck)
+                {
+                    var result = RollCheckSender();
+                    if (result > 6)
+                    {
+                        if (result < 10)
+                        {
+                            hitBless++;
+                            BattleLog.AppendLine("Ваша музыка вдохновляет вас на бой и вы уверены, что в этот раз ударите еще точнее!");
+                        }
+                        else
+                        {
+                            hitBless += 2;
+                            BattleLog.AppendLine("Ваша музыка вдохновляет вас на бой и вы уверены, что в этот раз ударите намного точнее!");
+                        }
+                    }
+                    else
+                    {
+                        BattleLog.AppendLine("Решив спеть, вы закашлялись. Неудача...");
+                    }
+                }
+                else
+                {
+                    BattleLog.AppendLine("Между другими действиями можно использовать благословение и предмет из инвентаря только один раз!");
+                }
+            };
+            BattleScreen.Controls.Add(bless);
+        }
+
+        private static void HeroPowerBlessCreate(Button bless)
+        {
+            bless.Click += (sender, args) =>
+            {
+                if (blessCheck)
+                {
+                    var result = RollCheckSender();
+                    if (result > 6)
+                    {
+                        if (result < 10)
+                        {
+                            heroPowerBless++;
+                            BattleLog.AppendLine("Ваше пение пробуждает в вас скрытую силу! Следующее попадание будет смертоноснее!");
+                        }
+                        else
+                        {
+                            heroPowerBless += 2;
+                            BattleLog.AppendLine("Ваше пение пробуждает в вас мощь великанов! Следующее попадание будет еще смертоноснее!");
+                        }
+                    }
+                    else
+                    {
+                        BattleLog.AppendLine("Хоть ваше тело и налилось энергией, но не может с ней справиться! Она незамедлительно покинула вас...");
+                    }
+                    blessCheck = false;
+                }
+                else
+                {
+                    BattleLog.AppendLine("Между другими действиями можно использовать благословение и предмет из инвентаря только один раз!");
+                }
+            };
+            BattleScreen.Controls.Add(bless);
+        }
+
+        private static void GetHealthBlessCreate(Button bless)
+        {
+            bless.Click += (sender, args) =>
+            {
+                if (blessCheck)
+                {
+                    var result = RollCheckSender();
+                    if (result > 6)
+                    {
+                        if (result < 10)
+                        {
+                            hero.Health++;
+                            BattleLog.AppendLine("Вы почувствоваль эманации жизни в воздухе и сковали их своей песней! 1 ед. здоровья восстановлена.");
+                        }
+                        else
+                        {
+                            hero.Health += 2;
+                            BattleLog.AppendLine("Сильные эманации жизни пришли в ваш инструмент! 2 ед. здоровья восстановлены!");
+                        }
+                    }
+                    else
+                    {
+                        BattleLog.AppendLine("Почувствовав толику жизни в воздухе вы попытались поймать её, но она улетучилась...");
+                    }
+                }
+                else
+                {
+                    BattleLog.AppendLine("Между другими действиями можно использовать благословение и предмет из инвентаря только один раз!");
+                }
+            };
+            BattleScreen.Controls.Add(bless);
+        }
+
+        private static void EscapeBlessCreate(Button bless)
+        {
+            bless.Click += (sender, args) =>
+            {
+                if (blessCheck)
+                {
+                    var result = RollCheckSender();
+                    if (result > 6)
+                    {
+                        if (result < 10)
+                        {
+                            escapeBless++;
+                            BattleLog.AppendLine("Ваши стихи придали лёгкость ногам. Сбежать будет легче!");
+                        }
+                        else
+                        {
+                            escapeBless += 2;
+                            BattleLog.AppendLine("Ваши ноги вышли на новый уровень! Сбежать гораздо легче.");
+                        }
+                    }
+                    else
+                    {
+                        BattleLog.AppendLine("Споткнувшись в конце предложения, вы не закончили стих. Неудача...");
+                    }
+                }
+                else
+                {
+                    BattleLog.AppendLine("Между другими действиями можно использовать благословение и предмет из инвентаря только один раз!");
+                }
+            };
+            BattleScreen.Controls.Add(bless);
         }
 
         public static Button CreateButtonSword()
@@ -102,29 +316,39 @@ namespace Движение.Controllers
             };
             buttonSword.Click += (sender, args) =>
             {
-                var result = RollCheckSender();
+                var result = RollCheckSender(hitBless);
+                var damage = monster.AttackPower + monsterPowerBless;
+                hitBless = 0;
+                blessCheck = true;
                 if (result > 6)
                 {
-                    monster.Health--;
+                    var attackDamage = hero.AttackPower + heroPowerBless;
                     if (result < 10)
                     {
-                        hero.Health--;
-                        BattleLog.AppendLine("Ваше попадание успешно, но из-за неаккуратности вы тоже получаете урон! Вы и монстр получили 1 ед. урона");
+                        hero.Health -= damage;
+                        monsterPowerBless = 0;
+                        BattleLog.AppendLine("Ваше попадание успешно, но из-за неаккуратности вы тоже получаете урон! Вы получили " +
+                             damage.ToString() + ", а монстр " + attackDamage.ToString() + " ед. урона");
+                        heroPowerBless = 0;
+                        monster.Health -= attackDamage;
                         if (monster.Health == 0)
-                            EndBattle("Вы зарубили его, но на последок получили 1 урона!\nОсталось только собрать лут...", true);
+                            EndBattle("Вы зарубили его, но на последок получили " + damage.ToString() + "ед. урона!\nОсталось только собрать лут...", true);
                     }
                     else
                     {
-                        monster.Health--;
-                        BattleLog.AppendLine("Точным выпадом вы атаковали монстра в слабое место! Монстр получил 2 ед. урона");
+                        monster.Health -= attackDamage * 2;
+                        BattleLog.AppendLine("Точным выпадом вы атаковали монстра в слабое место! Монстр получил " +
+                            attackDamage.ToString() + " ед. урона");
+                        heroPowerBless = 0;
                         if (monster.Health == 0)
                             EndBattle("Вы зарубили его!\nОсталось только собрать лут...", true);
                     }
                 }
                 else
                 {
-                    hero.Health--;
-                    BattleLog.AppendLine("Монстр отбил атаку и контратаковал. Вы получили 1 ед. урон!");
+                    hero.Health -= damage;
+                    monsterPowerBless = 0;
+                    BattleLog.AppendLine("Монстр отбил атаку и контратаковал. Вы получили " + damage.ToString() + " ед. урон!");
                 }
             };
             return buttonSword;
@@ -141,23 +365,32 @@ namespace Движение.Controllers
             };
             buttonBow.Click += (sender, args) =>
             {
-                var result = RollCheckSender();
+                blessCheck = true;
+                var result = RollCheckSender(hitBless);
+                hitBless = 0;
+                var attackDamage = hero.AttackPower + heroPowerBless;
                 if (result > 9)
                 {
-                    monster.Health--;
-                    BattleLog.AppendLine("Выстрел нашел свою цель! Монстр получил 1 ед. урона");
-                    if (monster.Health == 0)
-                        EndBattle("Вы застрелили его!\nОсталось только собрать лут...", true);
+                    monster.Health -= attackDamage;
+                    heroPowerBless = 0;
+                    BattleLog.AppendLine("Выстрел нашел свою цель! Монстр получил " + attackDamage.ToString() + " ед. урона");
                 }
                 else if (result > 6)
                 {
-                    BattleLog.AppendLine("Вы успели уклониться после атаки монстра, но и его удар не достиг цели! Никто не получил урона");
+                    monster.Health -= attackDamage / 2;
+                    heroPowerBless = 0;
+                    BattleLog.AppendLine("Вы успели уклониться после атаки монстра, но ваш удар прошел по касательной! Монстр получил " + (attackDamage / 2).ToString() + " ед. урона.");
                 }
                 else
                 {
-                    hero.Health--;
-                    BattleLog.AppendLine("Монстр уклонился и резко сократил дистанцию. Вы получили 1 ед. урон!");
+
+                    var damage = monster.AttackPower + monsterPowerBless;
+                    hero.Health -= damage;
+                    monsterPowerBless = 0;
+                    BattleLog.AppendLine("Монстр уклонился и резко сократил дистанцию. Вы получили " + damage.ToString() + " ед. урон!");
                 }
+                if (monster.Health == 0)
+                    EndBattle("Вы застрелили его!\nОсталось только собрать лут...", true);
             };
             return buttonBow;
         }
@@ -183,9 +416,27 @@ namespace Движение.Controllers
                 Text = "БЛАГОСЛОВЕНИЕ",
                 Font = new Font(Fonts.Families[1], 20),
             };
+            var nameOfBlesses = new string[5] {
+                "Слово слабости", "Слово сокола", "Слово великана", "Слово лечения", "Слово лани" };
             buttonBless.Click += (sender, args) =>
             {
-                var result = RollCheckSender();
+                var blessList = new Button[5];
+                for (int i = 0; i < 5; i++)
+                {
+                    blessList[i] = new Button
+                    {
+                        Size = new Size(ButtonWidth, ButtonHeight),
+                        Location = i > 0 ? new Point(blessList[i - 1].Location.X, blessList[i - 1].Location.Y - ButtonHeight)
+                        : new Point(BattleLog.Location.X + BattleLog.Size.Width, BattleScreen.Height - ButtonHeight),
+                        Text = nameOfBlesses[i],
+                        Font = new Font(Fonts.Families[1], 20),
+                    };
+                }
+                MonsterPowerBlessCreate(blessList[0]);
+                HitBlessCreate(blessList[1]);
+                HeroPowerBlessCreate(blessList[2]);
+                GetHealthBlessCreate(blessList[3]);
+                EscapeBlessCreate(blessList[4]);
             };
             return buttonBless;
         }
@@ -202,11 +453,16 @@ namespace Движение.Controllers
             };
             buttonEscape.Click += (sender, args) =>
             {
-                var result = RollCheckSender();
+                blessCheck = true;
+                var result = RollCheckSender(escapeBless);
+                escapeBless = 0;
                 if (result > 6)
                 {
                     if (result < 10)
-                        hero.Health--;
+                    {
+                        hero.Health -= monster.AttackPower + monsterPowerBless;
+                        monsterPowerBless = 0;
+                    }
                     mapS.Show();
                     MapController.BackStep();
                     mapS.player.isInBattle = false;
@@ -215,9 +471,11 @@ namespace Движение.Controllers
                 }
                 else
                 {
-                    hero.Health--;
+                    hero.Health -= monster.AttackPower + monsterPowerBless;
+                    var damage = monster.AttackPower + monsterPowerBless;
+                    monsterPowerBless = 0;
                     BattleLog.AppendLine("При попытке побега вы выкинули " + result.ToString()
-                        + " и получили 1 урон! Монстр обрезал тот путь.");
+                        + " и получили " + damage.ToString() + " урон! Монстр обрезал тот путь.");
                 }
             };
             return buttonEscape;
