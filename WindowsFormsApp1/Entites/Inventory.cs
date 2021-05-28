@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Движение.Entites
 {
-    class Item
+    public class Item
     {
         public string Name;
         public Tuple<bool, int> IsHeal;
@@ -23,13 +24,17 @@ namespace Движение.Entites
         }
     }
 
-    class Inventory
+    public class Inventory
     {
         private List<Item> items = new List<Item>();
-        public void AddItem(Item item)
+        public bool AddItem(Item item)
         {
             if (items.Count < 5)
+            {
                 items.Add(item);
+                return true;
+            }
+            return false;
         }
 
         public Item UseItem(string name)
@@ -39,6 +44,20 @@ namespace Движение.Entites
             return item;
         }
 
+        public void ReplaceItem(Item oldItem, Item newItem)
+        {
+            var index = items.IndexOf(oldItem);
+            items[index] = newItem;
+        }
         public IEnumerator<Item> GetEnumerator() => items.GetEnumerator();
+
+        public Item this[int index]
+        {
+            get
+            {
+                return items[index];
+            }
+            set { }
+        }
     }
 }

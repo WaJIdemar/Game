@@ -16,7 +16,6 @@ namespace Движение.Controllers
         public const int mapWidth = 21;
         public static int cellSize = 30;
         public static char[,] map = new char[mapHeight, mapWidth];
-        public static Image spriteSheet;
         public static Bitmap mapImage;
         public static Hero hero;
 
@@ -25,9 +24,6 @@ namespace Движение.Controllers
             map = MapController.GetMap();
             map[player.LocationMap.Y, player.LocationMap.X] = 'p';
             hero = player;
-            spriteSheet =
-               new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Forest.png"));
             CreateMap();
         }
 
@@ -65,58 +61,61 @@ namespace Движение.Controllers
                         switch (map[j, i])
                         {
                             case 'p':
-                                var pathToSprite = hero.pathSpriteSheetRigth + @"0.png";
+                                var pathToSprite = hero.pathSpriteSheetStand + @"0.png";
                                 var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                                     pathToSprite));
-                                g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
+                                g.DrawImage(MapController.spriteGround, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
                                 g.DrawImage(image, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
                                 break;
 
                             case 'w':
-                                g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 96, 0, 20, 20, GraphicsUnit.Pixel);
+                                g.DrawImage(MapController.spriteWall, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
                                 break;
 
                             case 'K':
-                                g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 170, 0, 20, 20, GraphicsUnit.Pixel);
+                                g.DrawImage(MapController.spriteGround, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
+                                g.DrawImage(MapController.spriteKnight, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
                                 break;
 
-                            case 'B':
-                                g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 96, 75, 20, 20, GraphicsUnit.Pixel);
-                                break;
+                            //case 'B':
+                            //    g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 96, 75, 20, 20, GraphicsUnit.Pixel);
+                            //    break;
 
                             case 'W':
-                                g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 170, 75, 20, 20, GraphicsUnit.Pixel);
+                                g.DrawImage(MapController.spriteGround, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
+                                g.DrawImage(MapController.spriteWater, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
                                 break;
 
                             case 'M':
-                                g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
+                                g.DrawImage(MapController.spriteGround, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
+                                MapController.monsters[(i, j)].PlayAnimation(g, (i - deltaX) * cellSize, (j - deltaY) * cellSize, cellSize);
                                 break;
 
                             case 'C':
-                                g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
+                                g.DrawImage(MapController.spriteGround, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
+                                g.DrawImage(MapController.spriteChest, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
                                 break;
 
                             case 'm':
-                                g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 170, 30, 20, 20, GraphicsUnit.Pixel);
+                                g.DrawImage(MapController.spriteGround, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
+                                MapController.monsters[(i, j)].PlayAnimation(g, (i - deltaX) * cellSize, (j - deltaY) * cellSize, cellSize);
                                 break;
 
-                            case 'T':
-                                g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 120, 75, 20, 20, GraphicsUnit.Pixel);
-                                break;
+                            //case 'T':
+                            //    g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 120, 75, 20, 20, GraphicsUnit.Pixel);
+                            //    break;
 
                             case '0':
-                                g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 0, 0, 20, 20, GraphicsUnit.Pixel);
+                                g.DrawImage(MapController.spriteGround, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
                                 break;
                         }
                     }
                     else
                     {
-                        g.DrawImage(spriteSheet, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)), 96, 0, 20, 20, GraphicsUnit.Pixel);
+                        g.FillRectangle(Brushes.Black, new Rectangle(new Point((i - deltaX) * cellSize, (j - deltaY) * cellSize), new Size(cellSize, cellSize)));
                     }
                 }
             }
-            mapImage.Save(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-           .Parent.Parent.Parent.FullName.ToString(), @"Map\MiniMap.png"), ImageFormat.Png);
         }
     }
 }

@@ -71,7 +71,7 @@ namespace Движение.Controllers
                 { 'w', 'w', 'w', 'w', 'w', '0', 'w', 'C', '0', 'w', 'w', 'w', '0', 'w', 'M', 'w', '0', 'w', 'w', 'w', 'w', 'M', 'w'},
                 { 'w', 'C', 'w', 'w', '0', '0', '0', '0', 'M', '0', '0', '0', 'M', 'w', '0', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
                 { 'w', '0', '0', '0', '0', 'w', '0', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'C', 'w', 'w', 'w', 'w', 'w', 'w', '0', 'w'},
-                { 'w', 'M', 'w', 'w', 'w', 'w', '0', 'w', '0', 'w', '0', '0', 'm', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
+                { 'w', 'M', 'w', 'w', 'w', 'w', '0', 'w', '0', 'w', 'C', '0', 'm', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
                 { 'w', '0', '0', '0', '0', '0', '0', 'w', '0', 'w', '0', '0', '0', 'K', 'M', '0', '0', '0', '0', '0', '0', '0', 'w'},
                 { 'w', '0', 'w', 'w', 'w', '0', '0', 'w', '0', 'w', '0', '0', '0', 'w', 'w', 'w', '0', '0', '0', '0', 'w', '0', 'w'},
                 { 'w', '0', '0', 'w', 'w', '0', '0', 'w', '0', 'w', 'w', '0', 'w', 'w', '0', 'w', 'w', 'w', 'w', 'w', 'w', '0', 'w'},
@@ -107,11 +107,15 @@ namespace Движение.Controllers
                         g.DrawImage(spriteGround, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
                         if (monsters.ContainsKey((point.X, point.Y)))
                         {
-                            monsters[(point.X, point.Y)].posX = point.X * cellSize - player.delta.X;
-                            monsters[(point.X, point.Y)].posY = point.Y * cellSize - player.delta.Y;
-                            monsters[(point.X, point.Y)].PlayAnimation(g, monsters[(point.X, point.Y)].posX, monsters[(point.X, point.Y)].posY, monsters[(point.X, point.Y)].Size);
+                            if (map[point.Y +1, point.X +1] == 'B' && map[point.Y, point.X +1] == 'B'
+                                && map[point.Y + 1, point.X] == 'B')
+                            {
+                                monsters[(point.X, point.Y)].posX = point.X * cellSize - player.delta.X;
+                                monsters[(point.X, point.Y)].posY = point.Y * cellSize - player.delta.Y;
+                                monsters[(point.X, point.Y)].PlayAnimation(g, monsters[(point.X, point.Y)].posX, monsters[(point.X, point.Y)].posY, monsters[(point.X, point.Y)].Size);
+                            }
                         }
-                            break;
+                        break;
 
                     case 'W':
                         g.DrawImage(spriteGround, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
@@ -151,7 +155,7 @@ namespace Движение.Controllers
         private static void CreateEntity()
         {
             monsters = new Dictionary<(int, int), ICharacter>();
-            var isBoss = true;
+
             for (int i = 0; i < mapHeight; i++)
             {
                 for (int j = 0; j < mapWidth; j++)
@@ -160,12 +164,10 @@ namespace Движение.Controllers
                         monsters.Add((j, i), new OrangeMonster(j * cellSize, i * cellSize, MonsterModels.idleFrames, new Point(j, i), Hero.Size));
                     else if (map[i, j] == 'm')
                         monsters.Add((j, i), new MimicMonster(j * cellSize, i * cellSize, MimicModels.idleFrames, new Point(j, i), Hero.Size));
-                    else if (map[i, j] == 'B' && isBoss)
+                    else if (map[i, j] == 'B')
                     {
-                        isBoss = false;
-                        monsters.Add((j, i), new Boss(j * cellSize, i * cellSize, 1, new Point(j, i), Hero.Size*2));
+                        monsters.Add((j, i), new Boss(j * cellSize, i * cellSize, 1, new Point(j, i), Hero.Size * 2));
                     }
-
                 }
             }
         }

@@ -39,9 +39,9 @@ namespace Движение.Entites
         public string pathSpriteSheetStand;
 
         public int Size { get; set; }
-        public int posX { get; set ; }
-        public int posY { get; set ; }
-
+        public int posX { get; set; }
+        public int posY { get; set; }
+        public Inventory inventory;
         public Hero(int posX, int posY, int idleFrames, int runFrames, int size)
         {
             this.posX = posX;
@@ -58,6 +58,7 @@ namespace Движение.Entites
             isInBattle = false;
             Health = 25;
             isAlive = true;
+            inventory = new Inventory();
             pathSpriteSheetRigth = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\Move Right\");
             pathSpriteSheetLeft = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
@@ -92,10 +93,17 @@ namespace Движение.Entites
                     LocationMap.Y--;
                 if (MapController.map[LocationMap.Y, LocationMap.X] == 'C')
                 {
-                    MapController.map[LocationMap.Y, LocationMap.X] = '0';
+                    if (inventory.AddItem(AllItems.GetRandomItem()))
+                        MapController.map[LocationMap.Y, LocationMap.X] = '0';
+                    else
+                    {
+                        inventory.ReplaceItem(inventory[0], AllItems.GetRandomItem());
+                        MapController.map[LocationMap.Y, LocationMap.X] = '0';
+                    }
                 }
-                else if (MapController.map[LocationMap.Y, LocationMap.X] == 'M' ||
-                    MapController.map[LocationMap.Y, LocationMap.X] == 'm')
+                else if (MapController.map[LocationMap.Y, LocationMap.X] == 'M' 
+                    || MapController.map[LocationMap.Y, LocationMap.X] == 'm' 
+                    || MapController.map[LocationMap.Y, LocationMap.X] == 'B')
                 {
                     whoInBattle = MapController.monsters[(LocationMap.X, LocationMap.Y)];
                     if (Health > 0)
@@ -169,7 +177,7 @@ namespace Движение.Entites
             }
             else if (dirX == dirY && dirX == 0)
             {
-                pathToSprite.Append(pathSpriteSheetStand+ currentFrame.ToString() + ".png");
+                pathToSprite.Append(pathSpriteSheetStand + currentFrame.ToString() + ".png");
                 var image = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
                 pathToSprite.ToString()));
                 g.DrawImage(image, new Rectangle(new Point(posX, posY), new Size(size, size)));

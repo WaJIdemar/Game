@@ -27,10 +27,11 @@ namespace Движение.Entites
             LocationMap = locationMap;
             spriteBoss = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Boss\B.png"));
-
+            SpriteForBattle = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+               .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Boss\BR.png"));
         }
 
-            public void Move()
+        public void Move()
         {
             throw new NotImplementedException();
         }

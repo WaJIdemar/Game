@@ -54,6 +54,7 @@ namespace WindowsFormsApp1
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
 
+            AllItems.Init();
 
             player = new Hero(MapController.mapWidth / 2 * sqSize, MapController.mapHeight / 2 * sqSize,
                 HeroModels.idleFrames, HeroModels.runFrames, sqSize);
