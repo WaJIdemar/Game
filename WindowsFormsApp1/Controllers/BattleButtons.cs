@@ -338,8 +338,8 @@ namespace Движение.Controllers
                     if (hero.inventory[indexOfItem].IsHeal.Item1)
                         hero.Health += hero.inventory[indexOfItem].IsHeal.Item2;
                     itemCheck = false;
-                    hero.inventory.UseItem(item.Text);
                     BattleLog.AppendLine("Вы успешно использовали " + hero.inventory[indexOfItem].Name);
+                    hero.inventory.UseItem(item.Text);
                     item.Text = "Пусто";
                 }
                 else if (item.Text == "Пусто")
