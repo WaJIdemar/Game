@@ -44,7 +44,7 @@ namespace Движение.Entites
             SpriteForBattle = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Knight\BattleModel.png"));
             Health = 15;
-            MaxHealth = 10;
+            MaxHealth = 15;
             AttackPower = 3;
         }
 
@@ -55,23 +55,13 @@ namespace Движение.Entites
 
         public void PlayAnimation(Graphics g, int posX, int posY, int size)
         {
-            if (countFrame == 10)
-            {
-                if (currentFrame < currentLimit - 1)
-                    currentFrame++;
-                else currentFrame = 0;
-                countFrame = 0;
-            }
-            else
-                countFrame++;
-
-
             var currentPathToSprite = new StringBuilder(pathToSprites);
             currentPathToSprite.Append(currentFrame.ToString() + ".png");
-            var spriteOrangeMonster =
-                new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
-                currentPathToSprite.ToString()));
-            g.DrawImage(spriteOrangeMonster, new Rectangle(new Point(posX, posY), new Size(size, size)));
+            var t = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),
+                currentPathToSprite.ToString());
+            var spriteKnight =
+                new Bitmap(t);
+            g.DrawImage(spriteKnight, new Rectangle(new Point(posX, posY), new Size(size, size)));
         }
 
         public void ResetMove()

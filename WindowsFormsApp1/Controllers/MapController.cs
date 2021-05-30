@@ -102,8 +102,10 @@ namespace Движение.Controllers
                         break;
 
                     case 'K':
+                        monsters[(point.X, point.Y)].posX = point.X * cellSize - player.delta.X;
+                        monsters[(point.X, point.Y)].posY = point.Y * cellSize - player.delta.Y;
                         g.DrawImage(spriteGround, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
-                        g.DrawImage(spriteKnight, new Rectangle(new Point(point.X * cellSize - player.delta.X, point.Y * cellSize - player.delta.Y), new Size(cellSize, cellSize)));
+                        monsters[(point.X, point.Y)].PlayAnimation(g, monsters[(point.X, point.Y)].posX, monsters[(point.X, point.Y)].posY, monsters[(point.X, point.Y)].Size);
                         break;
 
                     case 'B':
@@ -167,6 +169,8 @@ namespace Движение.Controllers
                         monsters.Add((j, i), new OrangeMonster(j * cellSize, i * cellSize, MonsterModels.idleFrames, new Point(j, i), Hero.Size));
                     else if (map[i, j] == 'm')
                         monsters.Add((j, i), new MimicMonster(j * cellSize, i * cellSize, MimicModels.idleFrames, new Point(j, i), Hero.Size));
+                    else if (map[i, j] == 'K')
+                        monsters.Add((j, i), new Knight(j * cellSize, i * cellSize, MimicModels.idleFrames, new Point(j, i), Hero.Size));
                     else if (map[i, j] == 'B')
                     {
                         monsters.Add((j, i), new Boss(j * cellSize, i * cellSize, 1, new Point(j, i), Hero.Size * 2));
