@@ -54,6 +54,9 @@ namespace Движение.Controllers
          * W = Water;
          * M = Monster;
          * C = Chest;
+         * m = mimic
+         * K = knight
+         * B = boss
          * 0 = Ground;
         */
 

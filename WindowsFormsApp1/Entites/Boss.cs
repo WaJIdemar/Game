@@ -30,6 +30,8 @@ namespace Движение.Entites
                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Boss\B.png"));
             SpriteForBattle = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Boss\BR.png"));
+            SpriteFace = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+               .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Boss\Face.png"));
             Health = 15;
             MaxHealth = Health;
             AttackPower = 4;

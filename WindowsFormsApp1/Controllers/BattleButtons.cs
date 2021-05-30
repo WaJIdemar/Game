@@ -13,6 +13,8 @@ namespace Движение.Controllers
 {
     public static class BattleButtons
     {
+        static bool isBlessesActive;
+        static bool isInventoryActive;
         static PrivateFontCollection Fonts;
 
         static int ButtonWidth;
@@ -20,8 +22,9 @@ namespace Движение.Controllers
 
         static Form BattleScreen;
         static MapScreen mapS;
+        static PictureBox MiniMap;
 
-        static ICharacter hero;
+        static Hero hero;
         static ICharacter monster;
 
         static TextBox BattleLog;
@@ -35,12 +38,17 @@ namespace Движение.Controllers
         static int heroPowerBless;
         static int monsterPowerBless;
         static bool blessCheck;
+        static bool itemCheck;
+        static bool isDesOpen;
+        static int totalMod3000;
 
         public static void InitData(int buttonWidth, int buttonHeight, Form battleScreen,
             PrivateFontCollection fonts, Image[] dices, MapScreen map,
-            ICharacter character1, ICharacter character2,
-            TextBox battleLog, PictureBox dice1, PictureBox dice2)
+            Hero character1, ICharacter character2,
+            TextBox battleLog, PictureBox dice1, PictureBox dice2, PictureBox miniMap)
         {
+            isBlessesActive = false;
+            isInventoryActive = false;
             Dices = dices;
             Fonts = fonts;
             ButtonWidth = buttonWidth;
@@ -54,9 +62,13 @@ namespace Движение.Controllers
             Dice2 = dice2;
             escapeBless = 0;
             hitBless = 0;
+            totalMod3000 = 0;
             blessCheck = true;
+            itemCheck = true;
+            isDesOpen = false;
+            MiniMap = miniMap;
         }
-
+        
         public static void EndBattle(string message, bool isWin)
         {
             BattleScreen.Controls.Clear();
@@ -87,6 +99,7 @@ namespace Движение.Controllers
                     mapS.player.isInBattle = false;
                     mapS.timer1.Start();
                     BattleScreen.Close();
+                    hero.inventory.AddItem(AllItems.GetRandomItem());
                 }
                 else
                     mapS.Close();
@@ -97,6 +110,7 @@ namespace Движение.Controllers
 
         public static int RollCheckSender(int mod = 0)
         {
+            mod += totalMod3000;
             var dice = new Dice();
             var diceValue1 = dice.Roll();
             var diceValue2 = dice.Roll();
@@ -136,6 +150,8 @@ namespace Движение.Controllers
             Dice2.Image = Dices[diceValue2];
             return diceValue1 + diceValue2 + 2;
         }
+
+        #region Blesses
 
         private static void MonsterPowerBlessCreate(Button bless)
         {
@@ -307,6 +323,77 @@ namespace Движение.Controllers
             };
             BattleScreen.Controls.Add(bless);
         }
+        #endregion
+
+        private static void ItemCreate(Button item, int indexOfItem)
+        {
+            item.Click += (sender, args) =>
+            {
+                if (itemCheck && item.Text != "Пусто")
+                {
+                    if (hero.inventory[indexOfItem].IsAddDamage.Item1)
+                        heroPowerBless += hero.inventory[indexOfItem].IsAddDamage.Item2;
+                    if (hero.inventory[indexOfItem].IsAddValueToDiceCheck.Item1)
+                        totalMod3000 += hero.inventory[indexOfItem].IsAddValueToDiceCheck.Item2;
+                    if (hero.inventory[indexOfItem].IsHeal.Item1)
+                        hero.Health += hero.inventory[indexOfItem].IsHeal.Item2;
+                    itemCheck = false;
+                    BattleLog.AppendLine("Вы успешно использовали " + hero.inventory[indexOfItem].Name);
+                    item.Text = "Пусто";
+                }
+                else if (item.Text == "Пусто")
+                {
+                    BattleLog.AppendLine("В этой ячейке инвентаря нет предмета!");
+                }
+                else
+                {
+                    BattleLog.AppendLine("Между другими действиями можно использовать благословение и предмет из инвентаря только один раз!");
+                }
+            };
+
+            var description = new Button
+            {
+                Location = new Point(item.Location.X + item.Size.Width, item.Location.Y),
+                Size = new Size(MiniMap.Location.X - item.Location.X - item.Size.Width, ButtonHeight),
+                Text = "(?)",
+                Font = new Font(Fonts.Families[0], 20)
+            };
+            description.Click += (sender, args) =>
+            {
+                if (!isDesOpen && item.Text != "Пусто")
+                {
+                    isDesOpen = true;
+                    var endLabel = new Label
+                    {
+                        Size = new Size(ButtonWidth, 2 * ButtonHeight),
+                        Location = new Point(BattleScreen.Width / 2 - ButtonWidth / 2, BattleScreen.Height / 2 - ButtonHeight),
+                        Text = hero.inventory[indexOfItem].Description,
+                        ForeColor = Color.Black,
+                        Font = new Font(Fonts.Families[0], 15),
+                        BorderStyle = BorderStyle.FixedSingle,
+                        TextAlign = ContentAlignment.MiddleCenter,
+                    };
+                    var endButton = new Button
+                    {
+                        Size = new Size(ButtonWidth, ButtonHeight),
+                        Location = new Point(BattleScreen.Width / 2 - ButtonWidth / 2, endLabel.Bottom),
+                        Text = "Закрыть",
+                        ForeColor = Color.Black,
+                        Font = new Font(Fonts.Families[0], 15),
+                    };
+                    endButton.Click += (sender, args) =>
+                    {
+                        BattleScreen.Controls.RemoveAt(BattleScreen.Controls.Count - 1);
+                        BattleScreen.Controls.RemoveAt(BattleScreen.Controls.Count - 1);
+                        isDesOpen = false;
+                    };
+                    BattleScreen.Controls.Add(endLabel);
+                    BattleScreen.Controls.Add(endButton);
+                }
+            };
+            BattleScreen.Controls.Add(description);
+            BattleScreen.Controls.Add(item);
+        }
 
         public static Button CreateButtonSword()
         {
@@ -323,6 +410,7 @@ namespace Движение.Controllers
                 var damage = monster.AttackPower + monsterPowerBless;
                 hitBless = 0;
                 blessCheck = true;
+                itemCheck = true;
                 if (result > 6)
                 {
                     var attackDamage = hero.AttackPower + heroPowerBless;
@@ -341,7 +429,7 @@ namespace Движение.Controllers
                     {
                         monster.Health -= attackDamage * 2;
                         BattleLog.AppendLine("Точным выпадом вы атаковали монстра в слабое место! Монстр получил " +
-                            attackDamage.ToString() + " ед. урона");
+                            (2 * attackDamage).ToString() + " ед. урона");
                         heroPowerBless = 0;
                         if (monster.Health <= 0)
                             EndBattle("Вы зарубили его!\nОсталось только собрать лут...", true);
@@ -369,6 +457,7 @@ namespace Движение.Controllers
             buttonBow.Click += (sender, args) =>
             {
                 blessCheck = true;
+                itemCheck = true;
                 var result = RollCheckSender(hitBless);
                 hitBless = 0;
                 var attackDamage = hero.AttackPower + heroPowerBless;
@@ -404,8 +493,34 @@ namespace Движение.Controllers
             {
                 Size = new Size(ButtonWidth, ButtonHeight),
                 Location = new Point(buttonBow.Location.X, buttonBow.Location.Y - ButtonHeight),
-                Text = "РАСХОДУЕМЫЙ ПРЕДМЕТ",
+                Text = "ИНВЕНТАРЬ",
                 Font = new Font(Fonts.Families[1], 20),
+            };
+
+            buttonItem.Click += (sender, args) =>
+            {
+                if (!isInventoryActive)
+                {
+                    if (isBlessesActive)
+                        for (int i = 0; i < 5; i++)
+                            BattleScreen.Controls.RemoveAt(BattleScreen.Controls.Count - 1);
+                    isInventoryActive = true;
+                    isBlessesActive = false;
+                    var itemList = new Button[5];
+                    for (int i = 0; i < 5; i++)
+                    {
+                        itemList[i] = new Button
+                        {
+                            Size = new Size(ButtonWidth, ButtonHeight),
+                            Location = i > 0 ? new Point(itemList[i - 1].Location.X, itemList[i - 1].Location.Y - ButtonHeight)
+                            : new Point(BattleLog.Location.X + BattleLog.Size.Width, BattleScreen.Height - ButtonHeight),
+                            Text = hero.inventory.Count > 4 - i ? hero.inventory[4 - i].Name
+                            : "Пусто",
+                            Font = new Font(Fonts.Families[1], 20),
+                        };
+                        ItemCreate(itemList[i], 4 - i);
+                    }
+                }
             };
             return buttonItem;
         }
@@ -423,23 +538,31 @@ namespace Движение.Controllers
                 "Слово слабости", "Слово сокола", "Слово великана", "Слово лечения", "Слово лани" };
             buttonBless.Click += (sender, args) =>
             {
-                var blessList = new Button[5];
-                for (int i = 0; i < 5; i++)
+                if (!isBlessesActive)
                 {
-                    blessList[i] = new Button
+                    if (isInventoryActive)
+                        for (int i = 0; i < 10; i++)
+                            BattleScreen.Controls.RemoveAt(BattleScreen.Controls.Count - 1);
+                    isBlessesActive = true;
+                    isInventoryActive = false;
+                    var blessList = new Button[5];
+                    for (int i = 0; i < 5; i++)
                     {
-                        Size = new Size(ButtonWidth, ButtonHeight),
-                        Location = i > 0 ? new Point(blessList[i - 1].Location.X, blessList[i - 1].Location.Y - ButtonHeight)
-                        : new Point(BattleLog.Location.X + BattleLog.Size.Width, BattleScreen.Height - ButtonHeight),
-                        Text = nameOfBlesses[i],
-                        Font = new Font(Fonts.Families[1], 20),
-                    };
+                        blessList[i] = new Button
+                        {
+                            Size = new Size(ButtonWidth, ButtonHeight),
+                            Location = i > 0 ? new Point(blessList[i - 1].Location.X, blessList[i - 1].Location.Y - ButtonHeight)
+                            : new Point(BattleLog.Location.X + BattleLog.Size.Width, BattleScreen.Height - ButtonHeight),
+                            Text = nameOfBlesses[i],
+                            Font = new Font(Fonts.Families[1], 20),
+                        };
+                    }
+                    MonsterPowerBlessCreate(blessList[0]);
+                    HitBlessCreate(blessList[1]);
+                    HeroPowerBlessCreate(blessList[2]);
+                    GetHealthBlessCreate(blessList[3]);
+                    EscapeBlessCreate(blessList[4]);
                 }
-                MonsterPowerBlessCreate(blessList[0]);
-                HitBlessCreate(blessList[1]);
-                HeroPowerBlessCreate(blessList[2]);
-                GetHealthBlessCreate(blessList[3]);
-                EscapeBlessCreate(blessList[4]);
             };
             return buttonBless;
         }
@@ -457,6 +580,7 @@ namespace Движение.Controllers
             buttonEscape.Click += (sender, args) =>
             {
                 blessCheck = true;
+                itemCheck = true;
                 var result = RollCheckSender(escapeBless);
                 escapeBless = 0;
                 if (result > 6)

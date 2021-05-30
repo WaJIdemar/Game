@@ -29,7 +29,7 @@ namespace Движение
         Timer battleTimer;
         ProgressBar heroHealth;
         ProgressBar monsterHealth;
-        ICharacter hero;
+        Hero hero;
         ICharacter monster;
         PrivateFontCollection fonts;
         readonly Image[] dices = new Image[6] { new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
@@ -57,7 +57,7 @@ namespace Движение
         }
 
         #region Инициализация экрана
-        public BattleScreen(MapScreen map, ICharacter character1, ICharacter character2)
+        public BattleScreen(MapScreen map, Hero character1, ICharacter character2)
         {
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
@@ -201,7 +201,7 @@ namespace Движение
             };
             Controls.Add(picMon);
             InitData(ButtonWidth, ButtonHeight, this, fonts, dices,
-                map, hero, character2, battleLog, dice1, dice2);
+                map, hero, character2, battleLog, dice1, dice2, miniMap);
             var buttonSword = CreateButtonSword();
             var buttonBow = CreateButtonBow(buttonSword);
             var buttonItem = CreateButtonItem(buttonBow);
@@ -224,7 +224,9 @@ namespace Движение
                 EndBattle("Это была последняя капля...\n Вы УБИТЫ!", false);
                 battleTimer.Stop();
             }
-            heroHealth.Value = hero.Health;
+            if (hero.Health > hero.MaxHealth)
+                hero.Health = hero.MaxHealth;
+            heroHealth.Value = hero.Health > 0 ? hero.Health : 0;
             monsterHealth.Value = monster.Health > 0 ? monster.Health : 0;
             Invalidate();
         }

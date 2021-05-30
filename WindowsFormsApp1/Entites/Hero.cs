@@ -9,7 +9,11 @@ namespace Движение.Entites
     {
         public bool isAlive { get; private set; }
         public int AttackPower { get; set; }
-        public int Health { get; set; }
+        public int Health
+        {
+            get;
+            set;
+        }
         public Point LocationMap;
         public Point delta;
         public int dirX;
@@ -102,9 +106,10 @@ namespace Движение.Entites
                         MapController.map[LocationMap.Y, LocationMap.X] = '0';
                     }
                 }
-                else if (MapController.map[LocationMap.Y, LocationMap.X] == 'M' 
-                    || MapController.map[LocationMap.Y, LocationMap.X] == 'm' 
-                    || MapController.map[LocationMap.Y, LocationMap.X] == 'B')
+                else if (MapController.map[LocationMap.Y, LocationMap.X] == 'M'
+                    || MapController.map[LocationMap.Y, LocationMap.X] == 'm'
+                    || MapController.map[LocationMap.Y, LocationMap.X] == 'B'
+                    || MapController.map[LocationMap.Y, LocationMap.X] == 'K')
                 {
                     whoInBattle = MapController.monsters[(LocationMap.X, LocationMap.Y)];
                     if (Health > 0)

@@ -27,6 +27,14 @@ namespace Движение.Entites
     public class Inventory
     {
         private List<Item> items = new List<Item>();
+        public int Count
+        {
+            get
+            {
+                return items.Count;
+            }
+            set { }
+        }
         public bool AddItem(Item item)
         {
             if (items.Count < 5)

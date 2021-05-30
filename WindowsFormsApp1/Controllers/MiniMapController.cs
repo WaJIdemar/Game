@@ -11,9 +11,9 @@ namespace Движение.Controllers
 {
     public static class MiniMapController
     {
-        public const int mapHeight = 21;
+        public const int mapHeight = MapController.mapHeight;
         public static HashSet<char> stop = new HashSet<char>(new char[] { 'w', 'W' });
-        public const int mapWidth = 21;
+        public const int mapWidth = MapController.mapWidth;
         public static int cellSize = 30;
         public static char[,] map = new char[mapHeight, mapWidth];
         public static Bitmap mapImage;
@@ -38,7 +38,7 @@ namespace Движение.Controllers
             mapImage = new Bitmap(cellSize * hero.visibility * 2 + cellSize, cellSize * hero.visibility * 2 + cellSize);
             var g = Graphics.FromImage(mapImage);
 
-            var points = MapController.FindFieldView(hero).OrderBy(p => p.X).ThenBy(p => p.Y).ToHashSet();
+            var points = MapController.FindFieldView(hero).ToHashSet();
             var deltaX = 0;
             if (hero.LocationMap.X - hero.visibility > 0)
                 deltaX = hero.LocationMap.X - hero.visibility;
@@ -51,7 +51,7 @@ namespace Движение.Controllers
             var downBord = mapHeight;
             if (hero.LocationMap.Y + hero.visibility < mapHeight)
                 downBord = hero.LocationMap.Y + hero.visibility;
-            g.FillRectangle(Brushes.Black, new Rectangle(0, 0, cellSize * hero.visibility * 2 - cellSize, cellSize * hero.visibility * 2 - cellSize));
+            g.FillRectangle(Brushes.Black, new Rectangle(0, 0, cellSize * hero.visibility * 2 + cellSize, cellSize * hero.visibility * 2 + cellSize));
             for (int i = deltaX; i <= rightBord; i++)
             {
                 for (int j = 0; j <= downBord; j++)
