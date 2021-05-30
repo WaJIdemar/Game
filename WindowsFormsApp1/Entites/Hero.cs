@@ -41,6 +41,7 @@ namespace Движение.Entites
         public int Size { get; set; }
         public int posX { get; set; }
         public int posY { get; set; }
+        public int MaxHealth { get; set; }
         public Inventory inventory;
         public Hero(int posX, int posY, int idleFrames, int runFrames, int size)
         {
@@ -57,6 +58,7 @@ namespace Движение.Entites
             LocationMap = new Point(MapController.mapWidth / 2, MapController.mapHeight / 2);
             isInBattle = false;
             Health = 25;
+            MaxHealth = Health;
             isAlive = true;
             inventory = new Inventory();
             pathSpriteSheetRigth = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
@@ -75,7 +77,6 @@ namespace Движение.Entites
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Main character\BattleModel.png"));
             AttackPower = 2;
         }
-
         public void Move()
         {
             delta.X += dirX;

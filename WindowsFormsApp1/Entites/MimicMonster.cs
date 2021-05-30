@@ -13,18 +13,19 @@ namespace Движение.Entites
         public int posY { get; set; }
         public Point LocationMap;
         public string pathToSprites;
-        public int Health { get ; set ; }
-        public int Size { get ; set ; }
-        public Image SpriteForBattle { get ; set ; }
-        public Image SpriteFace { get ; set ; }
+        public int Health { get; set; }
+        public int Size { get; set; }
+        public Image SpriteForBattle { get; set; }
+        public Image SpriteFace { get; set; }
 
         public int currentAnimation;
         public int currentFrame;
         public int currentLimit;
 
         public int idleFrames;
-       
+
         public int countFrame = 0;
+        public int MaxHealth { get; set; }
 
         public MimicMonster(int posX, int posY, int idleFrames, Point locationMap, int size)
         {
@@ -36,7 +37,7 @@ namespace Движение.Entites
             Size = size;
             currentAnimation = 0;
             currentFrame = 0;
-            currentLimit = idleFrames/10;
+            currentLimit = idleFrames / 10;
             LocationMap = locationMap;
             SpriteFace = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Mimic\Face.png"));
@@ -44,6 +45,7 @@ namespace Движение.Entites
                 .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Mimic\BattleModel.png"));
             Health = 10;
             AttackPower = 2;
+            MaxHealth = Health;
         }
 
         public void Move()
@@ -62,7 +64,7 @@ namespace Движение.Entites
             }
             else
                 countFrame++;
-           
+
 
             var currentPathToSprite = new StringBuilder(pathToSprites);
             currentPathToSprite.Append(currentFrame.ToString() + ".png");

@@ -1,10 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "iekI0Spu3F/sSMT2B/yiIia5eEmq2Rw5DhmCNmF4Q+e0WeFXCLAUibrYgQMsdvMwrWbpbXe9CvlaCnGizo8jyg==",
+  "dgSpecHash": "/DWfkNf6rYk9Wd6MiMK5yS+FPeo3w6FYAK9OmFFv8TXPq+7YgJoReqCTTCs8Jgo01IeAvqa4dMgmwwNmN+F5lw==",
   "success": true,
-  "projectFilePath": "D:\\Game\\TheBestGameEver\\WindowsFormsApp1\\Движение.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\Bi4ik\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.13\\microsoft.netcore.app.host.win-x64.3.1.13.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\Lenovo\\Documents\\GitHub\\Game\\WindowsFormsApp1\\Движение.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

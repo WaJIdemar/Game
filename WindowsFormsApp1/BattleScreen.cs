@@ -79,7 +79,7 @@ namespace Движение
             {
                 Location = new Point(Width - map.health.Size.Width, map.health.Location.Y),
                 Size = map.health.Size,
-                Maximum = character2.Health,
+                Maximum = character2.MaxHealth,
                 BackColor = map.health.BackColor,
                 Value = character2.Health,
                 ForeColor = map.health.ForeColor,
@@ -174,7 +174,7 @@ namespace Движение
 
             //Таймер обновления анимаций
             battleTimer = new Timer();
-            battleTimer.Interval = 100;
+            battleTimer.Interval = 30;
             battleTimer.Tick += new EventHandler(Update);
 
             //Блок для анимации героя
@@ -219,13 +219,13 @@ namespace Движение
 
         public void Update(object sender, EventArgs e)
         {
-            heroHealth.Value = hero.Health;
-            monsterHealth.Value = monster.Health;
             if (heroHealth.Value == 0)
             {
                 EndBattle("Это была последняя капля...\n Вы УБИТЫ!", false);
                 battleTimer.Stop();
             }
+            heroHealth.Value = hero.Health;
+            monsterHealth.Value = monster.Health > 0 ? monster.Health : 0;
             Invalidate();
         }
     }

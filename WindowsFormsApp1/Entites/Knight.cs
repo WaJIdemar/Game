@@ -6,46 +6,46 @@ using System.Text;
 
 namespace Движение.Entites
 {
-    public class OrangeMonster : ICharacter
+    class Knight : ICharacter
     {
         public int posX { get; set; }
         public int AttackPower { get; set; }
         public int posY { get; set; }
+        public Point LocationMap;
+        public string pathToSprites;
         public int Health { get; set; }
+        public int MaxHealth { get; set; }
+        public int Size { get; set; }
         public Image SpriteForBattle { get; set; }
         public Image SpriteFace { get; set; }
-        public Point LocationMap;
 
         public int currentAnimation;
         public int currentFrame;
         public int currentLimit;
 
         public int idleFrames;
-       
-        public string pathToSprites;
 
-        public int Size { get; set; }
-        public int MaxHealth { get; set; }
+        public int countFrame = 0;
 
-        public OrangeMonster(int posX, int posY, int idleFrames, Point locationMap, int size)
+        public Knight(int posX, int posY, int idleFrames, Point locationMap, int size)
         {
             this.posX = posX;
             this.posY = posY;
-            this.idleFrames = idleFrames;
-            this.pathToSprites = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-               .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Orange\Stand\");
+            this.idleFrames = idleFrames / 10;
+            pathToSprites = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
+               .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Knight\Stand\");
             Size = size;
             currentAnimation = 0;
             currentFrame = 0;
-            currentLimit = idleFrames;
+            currentLimit = idleFrames / 10;
             LocationMap = locationMap;
             SpriteFace = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Orange\Face.png"));
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Knight\Face.png"));
             SpriteForBattle = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
-                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Orange\BattleModel.png"));
-            Health = 5;
-            AttackPower = 1;
-            MaxHealth = Health;
+                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Knight\BattleModel.png"));
+            Health = 15;
+            MaxHealth = 10;
+            AttackPower = 3;
         }
 
         public void Move()
@@ -55,11 +55,18 @@ namespace Движение.Entites
 
         public void PlayAnimation(Graphics g, int posX, int posY, int size)
         {
-            if (currentFrame < currentLimit - 1)
-                currentFrame++;
-            else currentFrame = 0;
+            if (countFrame == 10)
+            {
+                if (currentFrame < currentLimit - 1)
+                    currentFrame++;
+                else currentFrame = 0;
+                countFrame = 0;
+            }
+            else
+                countFrame++;
 
-            var currentPathToSprite= new StringBuilder(pathToSprites);
+
+            var currentPathToSprite = new StringBuilder(pathToSprites);
             currentPathToSprite.Append(currentFrame.ToString() + ".png");
             var spriteOrangeMonster =
                 new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName.ToString(),

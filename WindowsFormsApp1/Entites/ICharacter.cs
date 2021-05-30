@@ -12,6 +12,7 @@ namespace Движение.Entites
         void ResetMove();
 
         int Health { get; set; }
+        int MaxHealth { get; set; }
         int Size { get; set; }
         int posX { get; set; }
         int posY { get; set; }
@@ -20,8 +21,8 @@ namespace Движение.Entites
         int AttackPower { get; set; }
         void PlayAnimation(Graphics g, int posX, int posY, int size);
 
-        
+
         void SetAnimationConfiguration(int currentAnimation);
-        
+
     }
 }

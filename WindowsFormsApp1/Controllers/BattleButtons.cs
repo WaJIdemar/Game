@@ -178,6 +178,7 @@ namespace Движение.Controllers
             {
                 if (blessCheck)
                 {
+                    blessCheck = false;
                     var result = RollCheckSender();
                     if (result > 6)
                     {
@@ -245,6 +246,7 @@ namespace Движение.Controllers
             {
                 if (blessCheck)
                 {
+                    blessCheck = false;
                     var result = RollCheckSender();
                     if (result > 6)
                     {
@@ -296,6 +298,7 @@ namespace Движение.Controllers
                     {
                         BattleLog.AppendLine("Споткнувшись в конце предложения, вы не закончили стих. Неудача...");
                     }
+                    blessCheck = false;
                 }
                 else
                 {
@@ -331,8 +334,8 @@ namespace Движение.Controllers
                              damage.ToString() + ", а монстр " + attackDamage.ToString() + " ед. урона");
                         heroPowerBless = 0;
                         monster.Health -= attackDamage;
-                        if (monster.Health == 0)
-                            EndBattle("Вы зарубили его, но на последок получили " + damage.ToString() + "ед. урона!\nОсталось только собрать лут...", true);
+                        if (monster.Health <= 0)
+                            EndBattle("Вы зарубили его, но на последок получили " + damage.ToString() + " ед. урона!\nОсталось только собрать лут...", true);
                     }
                     else
                     {
@@ -340,7 +343,7 @@ namespace Движение.Controllers
                         BattleLog.AppendLine("Точным выпадом вы атаковали монстра в слабое место! Монстр получил " +
                             attackDamage.ToString() + " ед. урона");
                         heroPowerBless = 0;
-                        if (monster.Health == 0)
+                        if (monster.Health <= 0)
                             EndBattle("Вы зарубили его!\nОсталось только собрать лут...", true);
                     }
                 }
@@ -389,7 +392,7 @@ namespace Движение.Controllers
                     monsterPowerBless = 0;
                     BattleLog.AppendLine("Монстр уклонился и резко сократил дистанцию. Вы получили " + damage.ToString() + " ед. урон!");
                 }
-                if (monster.Health == 0)
+                if (monster.Health <= 0)
                     EndBattle("Вы застрелили его!\nОсталось только собрать лут...", true);
             };
             return buttonBow;

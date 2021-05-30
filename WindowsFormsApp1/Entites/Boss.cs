@@ -15,7 +15,8 @@ namespace Движение.Entites
         public Point LocationMap;
         public Image SpriteForBattle { get; set; }
         public Image SpriteFace { get; set; }
-        public int AttackPower { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int MaxHealth { get; set; }
+        public int AttackPower { get; set; }
 
         public Image spriteBoss;
 
@@ -29,6 +30,9 @@ namespace Движение.Entites
                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Boss\B.png"));
             SpriteForBattle = new Bitmap(Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory())
                .Parent.Parent.Parent.FullName.ToString(), @"Sprites\Monsters\Boss\BR.png"));
+            Health = 15;
+            MaxHealth = Health;
+            AttackPower = 4;
         }
 
         public void Move()
