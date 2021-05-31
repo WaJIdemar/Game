@@ -21,7 +21,7 @@ namespace Движение.Controllers
 
         public static void Init(Hero player)
         {
-            map = MapController.GetMap();
+            map = MapController.map;
             map[player.LocationMap.Y, player.LocationMap.X] = 'p';
             hero = player;
             CreateMap();

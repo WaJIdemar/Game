@@ -22,6 +22,7 @@ namespace WindowsFormsApp1
         public PictureBox heroFace;
         public bool battleCheck = false;
         public int sqSize = 50;
+        BattleScreen battleScreen;
 
         public MapScreen()
         {
@@ -76,7 +77,7 @@ namespace WindowsFormsApp1
             if (player.isInBattle)
             {
                 MiniMapController.Init(player);
-                var battleScreen = new BattleScreen(this, player, player.whoInBattle);
+                battleScreen = new BattleScreen(this, player, player.whoInBattle);
                 Hide();
                 battleScreen.Show();
                 timer1.Stop();

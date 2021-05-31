@@ -327,6 +327,8 @@ namespace Движение.Controllers
 
         private static void ItemCreate(Button item, int indexOfItem)
         {
+            var textOfDes = item.Text != "Пусто" ? hero.inventory[indexOfItem].Description
+                : "";
             item.Click += (sender, args) =>
             {
                 if (itemCheck && item.Text != "Пусто")
@@ -368,7 +370,7 @@ namespace Движение.Controllers
                     {
                         Size = new Size(ButtonWidth, 2 * ButtonHeight),
                         Location = new Point(BattleScreen.Width / 2 - ButtonWidth / 2, BattleScreen.Height / 2 - ButtonHeight),
-                        Text = hero.inventory[indexOfItem].Description,
+                        Text = textOfDes,
                         ForeColor = Color.Black,
                         Font = new Font(Fonts.Families[0], 15),
                         BorderStyle = BorderStyle.FixedSingle,

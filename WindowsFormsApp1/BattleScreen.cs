@@ -26,6 +26,7 @@ namespace Движение
     {
         const int ButtonWidth = 384;
         const int ButtonHeight = 54;
+        public bool isBattleScreenOpen = true;
         Timer battleTimer;
         ProgressBar heroHealth;
         ProgressBar monsterHealth;
